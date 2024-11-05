@@ -36,7 +36,7 @@ func Example() {
 		SecretKey: "",
 		Debug:     true,
 	})
-	resp, err := cli.GetList(context.Background(), &api.FuzzySearchGetListReq{
+	resp, err := cli.FuzzySearchGetList(context.Background(), &api.FuzzySearchGetListReq{
 		SearchKey:    "企查查科技股份有限公司",
 		ProvinceCode: "",
 		CityCode:     "",
