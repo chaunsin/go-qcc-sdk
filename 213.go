@@ -26,6 +26,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"time"
 )
 
 type ARGetAnnualReportReq struct {
@@ -130,7 +131,7 @@ type ARGetAnnualReportRespResult struct {
 	PublishDate   string      `json:"PublishDate"`
 }
 
-// ARGetAnnualReport 企业年报信息 https://openapi.qcc.com/dataApi/213
+// ARGetAnnualReport 企业年报信息-查询公司年报信息 https://openapi.qcc.com/dataApi/213
 func (a *Api) ARGetAnnualReport(ctx context.Context, req *ARGetAnnualReportReq) (*ARGetAnnualReportResp, error) {
 	var resp ARGetAnnualReportResp
 	token, unix, err := a.auth()
@@ -146,6 +147,50 @@ func (a *Api) ARGetAnnualReport(ctx context.Context, req *ARGetAnnualReportReq) 
 		SetQueryParam("keyNo", req.KeyNo).
 		SetResult(&resp).
 		Get("https://api.qichacha.com/AR/GetAnnualReport")
+	if err != nil {
+		return nil, err
+	}
+	if reply.StatusCode() != 200 {
+		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
+	}
+	if resp.Status != "200" {
+		return nil, fmt.Errorf("err: %+v", resp)
+	}
+	return &resp, nil
+}
+
+type ARGetAnnualReportSummaryReq struct {
+	KeyNo string
+}
+
+type ARGetAnnualReportSummaryResp struct {
+	Response[[]ARGetAnnualReportSummaryResult]
+}
+
+type ARGetAnnualReportSummaryResult struct {
+	No            int         `json:"No"`
+	Year          string      `json:"Year"`
+	Remarks       interface{} `json:"Remarks"`
+	HasDetailInfo bool        `json:"HasDetailInfo"`
+	PublishDate   time.Time   `json:"PublishDate"`
+}
+
+// ARGetAnnualReportSummary 企业年报信息-查询公司年报概况 https://openapi.qcc.com/dataApi/213
+func (a *Api) ARGetAnnualReportSummary(ctx context.Context, req *ARGetAnnualReportSummaryReq) (*ARGetAnnualReportSummaryResp, error) {
+	var resp ARGetAnnualReportSummaryResp
+	token, unix, err := a.auth()
+	if err != nil {
+		return nil, fmt.Errorf("auth: %w", err)
+	}
+
+	reply, err := a.cli.R().
+		SetContext(ctx).
+		SetHeader("Token", token).
+		SetHeader("Timespan", unix).
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("keyNo", req.KeyNo).
+		SetResult(&resp).
+		Get("https://api.qichacha.com/AR/GetAnnualReportSummary")
 	if err != nil {
 		return nil, err
 	}
