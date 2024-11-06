@@ -14,21 +14,26 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/redis/go-redis/v9"
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	Key       string        `json:"key" yaml:"key"`
-	SecretKey string        `json:"secretKey" yaml:"secretKey"`
-	Location  string        `json:"location" yaml:"location"` // default: time.Local
-	Debug     bool          `json:"debug" yaml:"debug"`
-	Timeout   time.Duration `json:"timeout" yaml:"timeout"` // A Timeout of zero means no timeout
+	Key            string        `json:"key" yaml:"key"`
+	SecretKey      string        `json:"secretKey" yaml:"secretKey"`
+	Location       string        `json:"location" yaml:"location"` // default: time.Local
+	Debug          bool          `json:"debug" yaml:"debug"`
+	Timeout        time.Duration `json:"timeout" yaml:"timeout"` // A Timeout of zero means no timeout
+	EnableCache    bool          `json:"enableCache" yaml:"enableCache"`
+	NullDataExpire time.Duration `json:"nullDataExpire" yaml:"nullDataExpire"`
+	CachePrefix    string        `json:"cachePrefix" yaml:"cachePrefix"` // default: `qcc:`
 }
 
 type Api struct {
-	cfg *Config
-	cli *resty.Client
-	loc *time.Location
+	cfg   *Config
+	cli   *resty.Client
+	loc   *time.Location
+	cache *redis.Client
 }
 
 func New(cfg *Config) *Api {
