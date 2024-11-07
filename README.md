@@ -1,5 +1,7 @@
 # go-qcc-sdk
 
+[![GoDoc](https://godoc.org/github.com/chaunsin/go-qcc-sdk?status.svg)](https://godoc.org/github.com/chaunsin/go-qcc-sdk) [![Go Report Card](https://goreportcard.com/badge/github.com/chaunsin/go-qcc-sdk)](https://goreportcard.com/report/github.com/chaunsin/go-qcc-sdk)
+
 企查查go sdk
 
 ## 注意
@@ -8,7 +10,7 @@
 
 ## 功能
 
-分两步走
+目前开发分两步走
 
 1. 实现接口得基本查询功能(**进行中**)
 
