@@ -16,13 +16,13 @@ var (
 )
 
 func TestQCCService_GetCompanyGraph(t *testing.T) {
-	got, err := srv.GetCompanyGraph(ctx, "企查查科技股份有限公司")
+	got, err := srv.GetCompanyGraph(ctx, &GetCompanyGraphReq{SearchKey: "企查查科技股份有限公司"})
 	assert.NoError(t, err)
 	t.Logf("GetCompanyGraph: %+v", got)
 }
 
 func TestQCCService_GetList(t *testing.T) {
-	got, err := srv.GetList(ctx, &FuzzySearchGetListReq{SearchKey: "企查查科技股份有限公司"})
+	got, err := srv.FuzzySearchGetList(ctx, &FuzzySearchGetListReq{SearchKey: "企查查科技股份有限公司"})
 	assert.NoError(t, err)
 	t.Logf("GetList: %+v", got)
 }
