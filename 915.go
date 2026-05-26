@@ -73,7 +73,7 @@ func (a *Api) IPOAnnouncementGetList(ctx context.Context, req *IPOAnnouncementGe
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/IPOAnnouncement/GetList")
+	reply, err := c.SetResult(&resp).Get("/IPOAnnouncement/GetList")
 	if err != nil {
 		return nil, err
 	}

@@ -86,7 +86,7 @@ func (a *Api) EquityThroughGetEquityThrough(ctx context.Context, req *EquityThro
 		c.SetQueryParam("level", req.Level)
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/EquityThrough/GetEquityThrough")
+	reply, err := c.SetResult(&resp).Get("/EquityThrough/GetEquityThrough")
 	if err != nil {
 		return nil, err
 	}

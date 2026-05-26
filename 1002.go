@@ -72,7 +72,7 @@ func (a *Api) ECIRelationshipsGetInfo(ctx context.Context, req *ECIRelationships
 		SetQueryParam("searchKey1", req.SearchKey1).
 		SetQueryParam("searchKey2", req.SearchKey2).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/ECIRelationships/GetInfo")
+		Get("/ECIRelationships/GetInfo")
 	if err != nil {
 		return nil, err
 	}

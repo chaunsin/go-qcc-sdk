@@ -233,7 +233,7 @@ func (a *Api) ECIInfoOverviewGetInfo(ctx context.Context, req *ECIInfoOverviewGe
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/ECIInfoOverview/GetInfo")
+		Get("/ECIInfoOverview/GetInfo")
 	if err != nil {
 		return nil, err
 	}

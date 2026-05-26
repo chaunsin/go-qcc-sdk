@@ -77,7 +77,7 @@ func (a *Api) EquityFreezeCheckGetList(ctx context.Context, req *EquityFreezeChe
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/EquityFreezeCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/EquityFreezeCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

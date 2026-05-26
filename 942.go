@@ -80,7 +80,7 @@ func (a *Api) HoldingCompanyCheckGetList(ctx context.Context, req *HoldingCompan
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/HoldingCompanyCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/HoldingCompanyCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

@@ -102,7 +102,7 @@ func (a *Api) ECIRecentPartnerGetList(ctx context.Context, req *ECIRecentPartner
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/ECIRecentPartner/GetList")
+	reply, err := c.SetResult(&resp).Get("/ECIRecentPartner/GetList")
 	if err != nil {
 		return nil, err
 	}

@@ -76,7 +76,7 @@ func (a *Api) FuzzySearchGetList(ctx context.Context, req *FuzzySearchGetListReq
 	if req.PageSize > 0 {
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/FuzzySearch/GetList")
+	reply, err := c.SetResult(&resp).Get("/FuzzySearch/GetList")
 	if err != nil {
 		return nil, err
 	}

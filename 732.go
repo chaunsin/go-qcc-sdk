@@ -69,7 +69,7 @@ func (a *Api) ECIEmployeeGetList(ctx context.Context, req *ECIEmployeeGetListReq
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/ECISeniorPerson/GetList")
+	reply, err := c.SetResult(&resp).Get("/ECIEmployee/GetList")
 	if err != nil {
 		return nil, err
 	}

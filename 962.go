@@ -67,7 +67,7 @@ func (a *Api) GetCompanyGraph(ctx context.Context, req *GetCompanyGraphReq) (*Ge
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/CompanyGraphCheck/GetInfo")
+		Get("/CompanyGraphCheck/GetInfo")
 	if err != nil {
 		return nil, err
 	}

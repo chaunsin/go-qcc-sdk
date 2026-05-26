@@ -75,7 +75,7 @@ func (a *Api) AdminPenaltyCheckGetList(ctx context.Context, req *AdminPenaltyChe
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/AdminPenaltyCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/AdminPenaltyCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

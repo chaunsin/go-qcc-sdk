@@ -153,7 +153,7 @@ func (a *Api) EnterpriseInfoVerify(ctx context.Context, req *EnterpriseInfoVerif
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/EnterpriseInfo/Verify")
+		Get("/EnterpriseInfo/Verify")
 	if err != nil {
 		return nil, err
 	}

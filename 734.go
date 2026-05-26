@@ -74,7 +74,7 @@ func (a *Api) ECIChangeGetList(ctx context.Context, req *ECIChangeGetListReq) (*
 	if req.PageSize > 0 {
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/ECIChange/GetList")
+	reply, err := c.SetResult(&resp).Get("/ECIChange/GetList")
 	if err != nil {
 		return nil, err
 	}

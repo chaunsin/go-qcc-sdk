@@ -93,7 +93,7 @@ func (a *Api) ECIV4GetBasicDetailsByName(ctx context.Context, req *ECIV4GetBasic
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("keyword", req.Keyword).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/ECIV4/GetBasicDetailsByName")
+		Get("/ECIV4/GetBasicDetailsByName")
 	if err != nil {
 		return nil, err
 	}

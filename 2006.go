@@ -476,7 +476,7 @@ func (a *Api) RiskControlScan(ctx context.Context, req *RiskControlScanReq) (*Ri
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/RiskControl/Scan")
+		Get("/RiskControl/Scan")
 	if err != nil {
 		return nil, err
 	}

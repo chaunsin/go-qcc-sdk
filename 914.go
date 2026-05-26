@@ -70,7 +70,7 @@ func (a *Api) IPOCompanyGetList(ctx context.Context, req *IPOCompanyGetListReq) 
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/IPOCompany/GetList")
+	reply, err := c.SetResult(&resp).Get("/IPOCompany/GetList")
 	if err != nil {
 		return nil, err
 	}
