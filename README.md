@@ -97,8 +97,25 @@ func Example() {
 
 ```
 
+## AI Agent 快速开发
+
+本仓库在 `skills` 目录内置了面向 AI agent 的开发技能，可用于快速审计、创建或更新企查查 QCC OpenAPI SDK 接口。建议先审计接口覆盖情况，再按需创建或修复指定 ApiCode。
+
+### 使用方式
+
+- 审计官方文档与本地 SDK 覆盖情况：`/qcc:check` 或 `/qcc-check`
+- 创建或更新指定 ApiCode：`/qcc:create 886` 或 `/qcc-create https://openapi.qcc.com/dataApi/886`
+
+### 技能说明
+
+| 技能 | 目录 | 用途 |
+|:---:|:---|:---|
+| `qcc-check` | `skills/qcc-check` | 从官方文档统计 ApiCode 与接口数量，并与本地 `{ApiCode}.go` 实现做覆盖率对比。 |
+| `qcc-create` | `skills/qcc-create` | 根据官方接口文档创建、审计或修复对应的 Go SDK 请求/响应结构与方法。 |
+
+`skills` 是唯一维护源，`.agents/skills` 与 `.claude/skills` 通过符号链接指向该目录，方便不同 AI agent 复用同一套技能说明。官方接口信息以 https://openapi.qcc.com/dataApi 为准；使用技能时不要保存真实 QCC key、secret、cookie 或付费接口响应。
+
 ## 问题
 
 由于企查查得接口可能不定时得更新,接口出入参数可能发生变化，如有问题请在提issue时提供接口名称、ApiCode，方便我及时更新。
-
 
