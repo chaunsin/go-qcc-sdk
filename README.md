@@ -1,6 +1,7 @@
 # go-qcc-sdk
 
-[GoDoc](https://godoc.org/github.com/chaunsin/go-qcc-sdk) [Go Report Card](https://goreportcard.com/report/github.com/chaunsin/go-qcc-sdk)
+[![GoDoc](https://godoc.org/github.com/chaunsin/go-qcc-sdk?status.svg)](https://godoc.org/github.com/chaunsin/go-qcc-sdk) [![Go Report Card](https://goreportcard.com/badge/github.com/chaunsin/go-qcc-sdk)](https://goreportcard.com/report/github.com/chaunsin/go-qcc-sdk)
+
 
 企查查go sdk
 
