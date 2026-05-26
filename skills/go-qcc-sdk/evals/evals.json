@@ -1,0 +1,104 @@
+{
+  "skill_name": "go-qcc-sdk",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "在一个新的 Go HTTP 服务里接入 github.com/chaunsin/go-qcc-sdk，先做企业模糊搜索。请给我最小可用代码，Key/SecretKey 从 environment variables 读取，带 context timeout，不要真的调用付费接口。",
+      "expected_output": "The agent provides a consumer-side quickstart using go get/import, api.New with env credentials, non-empty credential validation, context timeout, FuzzySearchGetList, error-first handling before resp.Result access, and clear do not call paid QCC endpoints cautions.",
+      "files": [],
+      "expectations": [
+        "The output is about consuming the SDK from an application, not editing SDK source files.",
+        "The output shows or describes go get/import and constructing api.New with Key and SecretKey from environment variables.",
+        "The output validates Key and SecretKey are non-empty before constructing the client.",
+        "The output uses context timeout and handles err before reading resp.Result.",
+        "The output says the agent should not call paid QCC endpoints and should provide self-run steps if live verification is needed."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "我想把企查查查询封装进我们自己的 CompanyService，业务单测不能访问真实 QCC。请用 go-qcc-sdk 设计一个容易 mock 的结构，并说明什么时候才需要 httptest。",
+      "expected_output": "The agent recommends a narrow local interface around the SDK methods used by the app, a service that depends on that interface, fake implementations for business tests, and httptest plus api.NewClient/BaseURL only for local integration wiring.",
+      "files": [],
+      "expectations": [
+        "The output defines or describes a small application-owned interface rather than coupling all business code to the concrete SDK type.",
+        "The output uses fake implementations for most business unit tests.",
+        "The output reserves httptest and api.NewClient with BaseURL for local integration wiring tests.",
+        "The output keeps fixtures synthetic and avoids real paid QCC calls."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "这个 SDK 的 Config 怎么用？我有 yaml 配置文件，也想知道 BaseURL、Location、Timeout、Debug、TLS 分别适合什么场景。请偏生产接入建议。",
+      "expected_output": "The agent explains Config fields from the consumer perspective, recommends LoadConfig for production error handling, explains NewFromFile panic behavior, default BaseURL, Location panic risk, Timeout, Debug logging risk, InsecureSkipVerify/TLS cautions, and secret-file hygiene.",
+      "files": [],
+      "expectations": [
+        "The output explains Key, SecretKey, BaseURL, Location, Timeout, and Debug from an SDK user perspective.",
+        "The output recommends LoadConfig for production configuration and notes NewFromFile can panic on load failure.",
+        "The output warns invalid Location can panic during client construction.",
+        "The output mentions current api.New InsecureSkipVerify behavior and NewClient with custom resty for stricter TLS.",
+        "The output warns not to commit real secrets and to avoid Debug in production logs."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "线上偶尔返回 err: Status != \"200\"，本地测试又因为 BaseURL 指错打到了假服务，还有一些 timeout。请帮我从 go-qcc-sdk 调用方角度排障，注意 Debug 日志不要泄露 key。",
+      "expected_output": "The agent troubleshoots from the consumer call site: credential loading, BaseURL, context deadlines/timeouts, sanitized Debug logging, provider Status/Message/OrderNumber, and local reproduction without changing SDK source or making real QCC calls.",
+      "files": [],
+      "expectations": [
+        "The output starts from call-site configuration and does not modify SDK source.",
+        "The output checks BaseURL, context timeout, network/proxy settings, and credential presence.",
+        "The output uses provider Status, Message, OrderNumber, and Paging for diagnostics when available.",
+        "The output warns Debug can expose sensitive headers or query values.",
+        "The output keeps reproduction local and does not call real QCC endpoints."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "我只知道业务上要查企业工商风险画像，但不知道 go-qcc-sdk 里有没有现成方法。你帮我接入时不要编造方法名，先看 existing SDK methods / README / exported types。",
+      "expected_output": "The agent inspects or instructs inspection of existing SDK methods, README examples, and exported types before naming a method; if no method is found, it says not to invent method names and asks whether the user wants a different scope.",
+      "files": [],
+      "expectations": [
+        "The output says to inspect existing SDK methods, README examples, or exported types before naming an SDK call.",
+        "The output does not invent method names, request fields, response fields, or provider behavior.",
+        "The output stays in consumer-side integration and explains what to do if the needed method is unavailable.",
+        "The output avoids repository-internal implementation steps."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "我发现 go-qcc-sdk 里没有我需要的接口，你能直接在 skills/go-qcc-sdk 这个技能里指导 agent 新增 ApiCode 文件并做覆盖率审计吗？",
+      "expected_output": "The agent refuses scope drift: it states that go-qcc-sdk is for SDK consumption/integration, not SDK source modification, endpoint creation, ApiCode work, or coverage auditing, and asks whether the user wants to switch scope without naming repository-development skills.",
+      "files": [],
+      "expectations": [
+        "The output states that this skill is scoped to SDK adoption and consumer-side integration.",
+        "The output does not provide endpoint creation, official-doc scraping, or coverage-audit workflow steps.",
+        "The output asks whether to switch scope if the user wants SDK source work.",
+        "The output does not mention out-of-scope repository-development skill names."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "请根据官方文档修一下某个 response struct 的 JSON tags，并更新 SDK 内部请求参数。这个任务能用 go-qcc-sdk 技能吗？",
+      "expected_output": "The agent says this is repository-internal SDK source work, not consumer integration. It should not provide request/response struct repair instructions in this skill, and should ask whether the user wants to switch scope.",
+      "files": [],
+      "expectations": [
+        "The output identifies response struct and request parameter changes as SDK source work.",
+        "The output does not give SDK internal repair instructions.",
+        "The output keeps go-qcc-sdk scoped to consumer integration.",
+        "The output asks whether to switch scope."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "帮我统计本地 ApiCode 方法数量，判断哪些数字文件缺失。不要写应用接入代码。",
+      "expected_output": "The agent says repository implementation completeness and local ApiCode method counts are out of scope for this consumer integration skill, avoids producing a coverage report, and asks whether the user wants to switch scope.",
+      "files": [],
+      "expectations": [
+        "The output treats local ApiCode method counts as repository-internal work.",
+        "The output does not produce a coverage report or missing-file audit.",
+        "The output does not write application integration code because the user asked for repository completeness.",
+        "The output asks whether to switch scope."
+      ]
+    }
+  ]
+}

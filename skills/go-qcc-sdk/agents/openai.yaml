@@ -1,0 +1,4 @@
+interface:
+  display_name: "Go QCC SDK"
+  short_description: "Consumer integration helper for go-qcc-sdk"
+  default_prompt: "Use $go-qcc-sdk for 接入 go-qcc-sdk / 企查查 SDK / QCC SDK in Go applications: setup, credentials, config, existing method calls, SDK error handling, Response/Result/Paging reads, wrappers, mocks, local httptest fakes, and troubleshooting. Do not use it to modify SDK source."
