@@ -15,11 +15,11 @@ func TestGeneratedResponseSchemasParseReviewedFields(t *testing.T) {
 			"Result":{
 				"DataStatus":"S",
 				"Data":{
-					"FinancialIndexList":[{"IndexName":"毛利率"}],
-					"DeclarationDetail":{"CorporateInTaxDeclareList":[]},
-					"CollectionDetail":{"CorporateInTaxCollectionList":[]},
+					"FinancialIndexList":[{"IndexName":"毛利率","ValueList":[{"Date":"2024","Value":"14.00%"}]}],
+					"DeclarationDetail":{"CorporateInTaxDeclareList":[{"ThisYearSaleRevenue":"49.84"}]},
+					"CollectionDetail":{"CorporateInTaxCollectionList":[{"ActualAmount":"0.03"}]},
 					"SaleList":[],
-					"TaxData":{"TotalTaxList":[]},
+					"TaxData":{"TotalTaxList":[{"Year":"2024","DataList":[{"Month":"1","Amount":"0.18"}]}]},
 					"TaxBurdenRateList":[],
 					"FinancialList":[],
 					"SupplierCustomerList":[],
@@ -27,7 +27,7 @@ func TestGeneratedResponseSchemasParseReviewedFields(t *testing.T) {
 					"TopSupplierList":[],
 					"BreakLawDetailList":[],
 					"BreakLawSummaryList":[],
-					"ExpenseDetail":{"ElectricityExpenseList":[]},
+					"ExpenseDetail":{"ElectricityExpenseList":[{"Year":"2024","DataList":[{"Month":"1","Amount":"0.35"}]}]},
 					"CashFlowList":[]
 				}
 			}
@@ -36,10 +36,68 @@ func TestGeneratedResponseSchemasParseReviewedFields(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, "S", resp.Result.DataStatus)
 		assert.Len(t, resp.Result.Data.FinancialIndexList, 1)
-		assert.NotEmpty(t, resp.Result.Data.DeclarationDetail)
-		assert.NotEmpty(t, resp.Result.Data.CollectionDetail)
-		assert.NotEmpty(t, resp.Result.Data.TaxData)
-		assert.NotEmpty(t, resp.Result.Data.ExpenseDetail)
+		assert.Equal(t, "毛利率", resp.Result.Data.FinancialIndexList[0].IndexName)
+		assert.Equal(t, "49.84", resp.Result.Data.DeclarationDetail.CorporateInTaxDeclareList[0].ThisYearSaleRevenue)
+		assert.Equal(t, "0.03", resp.Result.Data.CollectionDetail.CorporateInTaxCollectionList[0].ActualAmount)
+		assert.Equal(t, "0.18", resp.Result.Data.TaxData.TotalTaxList[0].DataList[0].Amount)
+		assert.Equal(t, "0.35", resp.Result.Data.ExpenseDetail.ElectricityExpenseList[0].DataList[0].Amount)
+	})
+
+	t.Run("HK and certification payloads use concrete structs", func(t *testing.T) {
+		var hkResp HKDataGetDataResp
+		err := json.Unmarshal([]byte(`{
+			"Status":"200",
+			"Result":{
+				"DataStatus":"S",
+				"Data":{
+					"basic":{"Details":{"CompanyNameEng":"ACME LIMITED","OriginalNameList":[{"Name":"旧名"}]}},
+					"capitalstructure_live_simplified":{"Details":[{"Currency":"HKD","TotalAmount":"100"}]},
+					"directors_live":{"Details":[{"FullNameEng":"CHAN","Type":"自然人"}]},
+					"shareholders":{"Date":"2024-01-01","Details":[{"FullName":"张三","NumberofShares":"1"}],"verified":"1"},
+					"company_secretaries_live":{"Details":[{"FullNameChn":"秘书","AppointedDate":"2024-01-01"}]}
+				}
+			}
+		}`), &hkResp)
+		assert.NoError(t, err)
+		assert.Equal(t, "ACME LIMITED", hkResp.Result.Data.Basic.Details.CompanyNameEng)
+		assert.Equal(t, "旧名", hkResp.Result.Data.Basic.Details.OriginalNameList[0].Name)
+		assert.Equal(t, "HKD", hkResp.Result.Data.CapitalStructureLiveSimplified.Details[0].Currency)
+		assert.Equal(t, "1", hkResp.Result.Data.Shareholders.Verified)
+
+		var hknrtResp HKNRTDataGetDataResp
+		err = json.Unmarshal([]byte(`{
+			"Status":"200",
+			"Result":{
+				"DataStatus":"S",
+				"Data":{
+					"basic":{"Details":{"CompanyNameEng":"ACME LIMITED"}},
+					"capitalstructure_historical":{"Date":"2024-01-01","Details":[{"ClassofShares":"Ordinary","TotalNumber":"100"}]},
+					"director_historical":{"Details":[{"FullNameEng":"CHAN","PassportNumber":"P1"}]},
+					"shareholders":{"Details":[{"FullName":"张三","PercentofClass":"100.00%"}]},
+					"company_secretaries_historical":{"Details":[{"FullNameEng":"SECRETARY"}]},
+					"verified":"1",
+					"OriginalFile":"https://example.invalid/file.pdf"
+				}
+			}
+		}`), &hknrtResp)
+		assert.NoError(t, err)
+		assert.Equal(t, "Ordinary", hknrtResp.Result.Data.CapitalStructureHistorical.Details[0].ClassOfShares)
+		assert.Equal(t, "P1", hknrtResp.Result.Data.DirectorHistorical.Details[0].PassportNumber)
+		assert.Equal(t, "https://example.invalid/file.pdf", hknrtResp.Result.Data.OriginalFile)
+
+		var certResp ECICertificationGetCertificationDetailByIDResp
+		err = json.Unmarshal([]byte(`{
+			"Status":"200",
+			"Result":{
+				"Id":"cert-1",
+				"Data":{"企业名称":"企查查科技有限公司","证书编号":"17418Q20358R1M"},
+				"Schema":null
+			}
+		}`), &certResp)
+		assert.NoError(t, err)
+		assert.Equal(t, "企查查科技有限公司", certResp.Result.Data.CompanyName)
+		assert.Equal(t, "17418Q20358R1M", certResp.Result.Data.CertificateNo)
+		assert.Nil(t, certResp.Result.Schema)
 	})
 
 	t.Run("truncated JSON tags parse official names", func(t *testing.T) {
@@ -97,7 +155,7 @@ func TestGeneratedResponseSchemasParseReviewedFields(t *testing.T) {
 				"HouQiZhiDingDate":"2024-12-31",
 				"IntCls":38,
 				"Status":4,
-				"FlowItems":[{"Name":"申请"}]
+				"FlowItems":[{"FlowId":"f1","FlowItem":"申请","FlowDate":"2024-01-01"}]
 			}
 		}`), &tmResp)
 		assert.NoError(t, err)
@@ -105,6 +163,9 @@ func TestGeneratedResponseSchemasParseReviewedFields(t *testing.T) {
 		assert.Equal(t, "2024-12-31", tmResp.Result.HouQiZhiDingDate)
 		assert.Equal(t, int64(38), tmResp.Result.IntCls)
 		assert.Equal(t, int64(4), tmResp.Result.Status)
+		if assert.Len(t, tmResp.Result.FlowItems, 1) {
+			assert.Equal(t, "申请", tmResp.Result.FlowItems[0].FlowItem)
+		}
 	})
 
 	t.Run("nested paramList fields use concrete structs", func(t *testing.T) {

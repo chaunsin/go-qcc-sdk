@@ -25,7 +25,6 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
 
@@ -53,8 +52,8 @@ func (a *Api) HKNRTDataCreateOrder(ctx context.Context, req *HKNRTDataCreateOrde
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("hkEntityName", req.HkEntityName)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("hkEntityName", req.HkEntityName)
 
 	reply, err := c.SetResult(&resp).Get("/HKNRTData/CreateOrder")
 	if err != nil {
@@ -79,8 +78,106 @@ type HKNRTDataGetDataResp struct {
 }
 
 type HKNRTDataGetDataRespResult struct {
-	DataStatus string          `json:"DataStatus"`
-	Data       json.RawMessage `json:"Data"`
+	DataStatus string                   `json:"DataStatus"`
+	Data       HKNRTDataGetDataRespData `json:"Data"`
+}
+
+type HKNRTDataGetDataRespData struct {
+	Basic                        HKNRTDataBasic                        `json:"basic"`
+	CapitalStructureHistorical   HKNRTDataCapitalStructureHistorical   `json:"capitalstructure_historical"`
+	DirectorHistorical           HKNRTDataDirectorHistorical           `json:"director_historical"`
+	Shareholders                 HKNRTDataShareholders                 `json:"shareholders"`
+	CompanySecretariesHistorical HKNRTDataCompanySecretariesHistorical `json:"company_secretaries_historical"`
+	Verified                     string                                `json:"verified"`
+	OriginalFile                 string                                `json:"OriginalFile"`
+}
+
+type HKNRTDataBasic struct {
+	Details HKNRTDataBasicDetails `json:"Details"`
+}
+
+type HKNRTDataBasicDetails struct {
+	ID                         string                  `json:"Id"`
+	CompanyNumber              string                  `json:"CompanyNumber"`
+	BusinessRegistrationNumber string                  `json:"BusinessRegistrationNumber"`
+	CompanyNameChn             string                  `json:"CompanyNameChn"`
+	CompanyNameEng             string                  `json:"CompanyNameEng"`
+	CompanyType                string                  `json:"CompanyType"`
+	RegistrationDate           string                  `json:"RegistrationDate"`
+	Status                     string                  `json:"Status"`
+	Address                    string                  `json:"Address"`
+	AddressTrans               string                  `json:"Address_Trans"`
+	OfficeEffectiveDate        string                  `json:"OfficeEffectiveDate"`
+	WindingUpMode              string                  `json:"WindingUpMode"`
+	RegisterOfCharges          string                  `json:"RegisterOfCharges"`
+	DissolutionDate            string                  `json:"DissolutionDate"`
+	Important                  string                  `json:"Important"`
+	IncorporationPlace         string                  `json:"IncorporationPlace"`
+	Remarks                    string                  `json:"Remarks"`
+	OriginalNameList           []HKNRTDataOriginalName `json:"OriginalNameList"`
+}
+
+type HKNRTDataOriginalName struct {
+	StartDate string `json:"StartDate"`
+	EndDate   string `json:"EndDate"`
+	Name      string `json:"Name"`
+	EnName    string `json:"EnName"`
+}
+
+type HKNRTDataCapitalStructureHistorical struct {
+	Date    string                                     `json:"Date"`
+	Details []HKNRTDataCapitalStructureHistoricalEntry `json:"Details"`
+}
+
+type HKNRTDataCapitalStructureHistoricalEntry struct {
+	ClassOfShares   string `json:"ClassofShares"`
+	Currency        string `json:"Currency"`
+	TotalAmount     string `json:"TotalAmount"`
+	TotalAmountPaid string `json:"TotalAmountPaid"`
+	TotalNumber     string `json:"TotalNumber"`
+}
+
+type HKNRTDataDirectorHistorical struct {
+	Date    string                             `json:"Date"`
+	Details []HKNRTDataDirectorHistoricalEntry `json:"Details"`
+}
+
+type HKNRTDataDirectorHistoricalEntry struct {
+	FullNameEng     string `json:"FullNameEng"`
+	FullNameChn     string `json:"FullNameChn"`
+	Position        string `json:"Position"`
+	Type            string `json:"Type"`
+	ID              string `json:"Id"`
+	PassportCountry string `json:"PassportCountry"`
+	PassportNumber  string `json:"PassportNumber"`
+}
+
+type HKNRTDataShareholders struct {
+	Date    string                 `json:"Date"`
+	Details []HKNRTDataShareholder `json:"Details"`
+}
+
+type HKNRTDataShareholder struct {
+	Address        string `json:"Address"`
+	ClassOfShares  string `json:"ClassofShares"`
+	FullName       string `json:"FullName"`
+	FullNameChn    string `json:"FullNameChn"`
+	FullNameEng    string `json:"FullNameEng"`
+	NumberOfShares string `json:"NumberofShares"`
+	PercentOfClass string `json:"PercentofClass"`
+	TotalNumber    string `json:"TotalNumber"`
+}
+
+type HKNRTDataCompanySecretariesHistorical struct {
+	Date    string                                `json:"Date"`
+	Details []HKNRTDataCompanySecretaryHistorical `json:"Details"`
+}
+
+type HKNRTDataCompanySecretaryHistorical struct {
+	FullNameChn string `json:"FullNameChn"`
+	FullNameEng string `json:"FullNameEng"`
+	Type        string `json:"Type"`
+	Address     string `json:"Address"`
 }
 
 // HKNRTDataGetData 数据获取 https://openapi.qcc.com/dataApi/998
@@ -94,8 +191,8 @@ func (a *Api) HKNRTDataGetData(ctx context.Context, req *HKNRTDataGetDataReq) (*
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("orderNo", req.OrderNo)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("orderNo", req.OrderNo)
 
 	reply, err := c.SetResult(&resp).Get("/HKNRTData/GetData")
 	if err != nil {

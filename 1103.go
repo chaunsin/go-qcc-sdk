@@ -65,9 +65,9 @@ func (a *Api) CompanyMonthSaleGetInfo(ctx context.Context, req *CompanyMonthSale
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
-	c.SetQueryParam("dataMonth", req.DataMonth)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey).
+		SetQueryParam("dataMonth", req.DataMonth)
 
 	reply, err := c.SetResult(&resp).Get("/CompanyMonthSale/GetInfo")
 	if err != nil {

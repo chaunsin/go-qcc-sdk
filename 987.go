@@ -86,9 +86,9 @@ func (a *Api) PersonSelfLimitExitCheckGetList(ctx context.Context, req *PersonSe
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
-	c.SetQueryParam("personName", req.PersonName)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey).
+		SetQueryParam("personName", req.PersonName)
 	if req.PageIndex != "" {
 		c.SetQueryParam("pageIndex", req.PageIndex)
 	}

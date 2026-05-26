@@ -25,7 +25,6 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
 
@@ -69,8 +68,8 @@ func (a *Api) TmSearchByApplicant(ctx context.Context, req *TmSearchByApplicantR
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("keyword", req.Keyword)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("keyword", req.Keyword)
 	if req.PageSize > 0 {
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
@@ -101,38 +100,44 @@ type TmGetDetailsResp struct {
 }
 
 type TmGetDetailsRespResult struct {
-	AddressCn         string            `json:"AddressCn"`
-	AddressEn         string            `json:"AddressEn"`
-	AnnouncementIssue string            `json:"AnnouncementIssue"`
-	AnnouncementDate  string            `json:"AnnouncementDate"`
-	Applicant1        string            `json:"Applicant1"`
-	Applicant2        string            `json:"Applicant2"`
-	Color             string            `json:"Color"`
-	RegIssue          string            `json:"RegIssue"`
-	RegDate           string            `json:"RegDate"`
-	HouQiZhiDingDate  string            `json:"HouQiZhiDingDate"`
-	GuoJiZhuCeDate    string            `json:"GuoJiZhuCeDate"`
-	YouXianQuanDate   string            `json:"YouXianQuanDate"`
-	ValidPeriod       string            `json:"ValidPeriod"`
-	FlowItems         []json.RawMessage `json:"FlowItems"`
-	ListGroupItems    []string          `json:"ListGroupItems"`
-	ID                string            `json:"Id"`
-	RegNo             string            `json:"RegNo"`
-	IntCls            int64             `json:"IntCls"`
-	Name              string            `json:"Name"`
-	AppDate           string            `json:"AppDate"`
-	ApplicantCn       string            `json:"ApplicantCn"`
-	ApplicantEn       string            `json:"ApplicantEn"`
-	Agent             string            `json:"Agent"`
-	Status            int64             `json:"Status"`
-	FlowStatus        string            `json:"FlowStatus"`
-	FlowStatusDesc    string            `json:"FlowStatusDesc"`
-	HasImage          bool              `json:"HasImage"`
-	ImageURL          string            `json:"ImageUrl"`
-	IsShare           string            `json:"IsShare"`
-	TmType            string            `json:"TmType"`
-	TmStyle           string            `json:"TmStyle"`
-	SimilarGroups     string            `json:"SimilarGroups"`
+	AddressCn         string                           `json:"AddressCn"`
+	AddressEn         string                           `json:"AddressEn"`
+	AnnouncementIssue string                           `json:"AnnouncementIssue"`
+	AnnouncementDate  string                           `json:"AnnouncementDate"`
+	Applicant1        string                           `json:"Applicant1"`
+	Applicant2        string                           `json:"Applicant2"`
+	Color             string                           `json:"Color"`
+	RegIssue          string                           `json:"RegIssue"`
+	RegDate           string                           `json:"RegDate"`
+	HouQiZhiDingDate  string                           `json:"HouQiZhiDingDate"`
+	GuoJiZhuCeDate    string                           `json:"GuoJiZhuCeDate"`
+	YouXianQuanDate   string                           `json:"YouXianQuanDate"`
+	ValidPeriod       string                           `json:"ValidPeriod"`
+	FlowItems         []TmGetDetailsRespResultFlowItem `json:"FlowItems"`
+	ListGroupItems    []string                         `json:"ListGroupItems"`
+	ID                string                           `json:"Id"`
+	RegNo             string                           `json:"RegNo"`
+	IntCls            int64                            `json:"IntCls"`
+	Name              string                           `json:"Name"`
+	AppDate           string                           `json:"AppDate"`
+	ApplicantCn       string                           `json:"ApplicantCn"`
+	ApplicantEn       string                           `json:"ApplicantEn"`
+	Agent             string                           `json:"Agent"`
+	Status            int64                            `json:"Status"`
+	FlowStatus        string                           `json:"FlowStatus"`
+	FlowStatusDesc    string                           `json:"FlowStatusDesc"`
+	HasImage          bool                             `json:"HasImage"`
+	ImageURL          string                           `json:"ImageUrl"`
+	IsShare           string                           `json:"IsShare"`
+	TmType            string                           `json:"TmType"`
+	TmStyle           string                           `json:"TmStyle"`
+	SimilarGroups     string                           `json:"SimilarGroups"`
+}
+
+type TmGetDetailsRespResultFlowItem struct {
+	FlowID   string `json:"FlowId"`
+	FlowItem string `json:"FlowItem"`
+	FlowDate string `json:"FlowDate"`
 }
 
 // TmGetDetails 商标详情 https://openapi.qcc.com/dataApi/231
@@ -146,8 +151,8 @@ func (a *Api) TmGetDetails(ctx context.Context, req *TmGetDetailsReq) (*TmGetDet
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/tm/GetDetails")
 	if err != nil {

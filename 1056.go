@@ -81,8 +81,8 @@ func (a *Api) CourtNoticeDetailGetDetail(ctx context.Context, req *CourtNoticeDe
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/CourtNoticeDetail/GetDetail")
 	if err != nil {

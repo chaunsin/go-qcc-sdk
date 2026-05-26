@@ -94,8 +94,8 @@ func (a *Api) JudgmentDocDetailGetDetail(ctx context.Context, req *JudgmentDocDe
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/JudgmentDocDetail/GetDetail")
 	if err != nil {

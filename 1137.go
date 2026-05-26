@@ -72,8 +72,8 @@ func (a *Api) CompanyAnnouncementGetList(ctx context.Context, req *CompanyAnnoun
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageIndex != "" {
 		c.SetQueryParam("pageIndex", req.PageIndex)
 	}

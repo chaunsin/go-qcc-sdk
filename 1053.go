@@ -58,8 +58,8 @@ func (a *Api) SumptuaryDetailGetDetail(ctx context.Context, req *SumptuaryDetail
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/SumptuaryDetail/GetDetail")
 	if err != nil {

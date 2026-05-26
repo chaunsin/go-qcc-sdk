@@ -60,8 +60,8 @@ func (a *Api) ShellScanGetList(ctx context.Context, req *ShellScanGetListReq) (*
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 
 	reply, err := c.SetResult(&resp).Get("/ShellScan/GetList")
 	if err != nil {

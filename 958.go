@@ -108,8 +108,8 @@ func (a *Api) TenderCheckGetList(ctx context.Context, req *TenderCheckGetListReq
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("keyword", req.Keyword)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("keyword", req.Keyword)
 	if req.AreaCode != "" {
 		c.SetQueryParam("areaCode", req.AreaCode)
 	}
@@ -173,8 +173,8 @@ func (a *Api) TenderCheckGetDetail(ctx context.Context, req *TenderCheckGetDetai
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/TenderCheck/GetDetail")
 	if err != nil {

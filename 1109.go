@@ -78,10 +78,10 @@ func (a *Api) ShopHistorySaleGetInfo(ctx context.Context, req *ShopHistorySaleGe
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("platformId", req.PlatformID)
-	c.SetQueryParam("shopId", req.ShopID)
-	c.SetQueryParam("dataMonth", req.DataMonth)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("platformId", req.PlatformID).
+		SetQueryParam("shopId", req.ShopID).
+		SetQueryParam("dataMonth", req.DataMonth)
 
 	reply, err := c.SetResult(&resp).Get("/ShopHistorySale/GetInfo")
 	if err != nil {

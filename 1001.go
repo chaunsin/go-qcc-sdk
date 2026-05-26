@@ -68,8 +68,8 @@ func (a *Api) HonorQualificationGetList(ctx context.Context, req *HonorQualifica
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageSize != "" {
 		c.SetQueryParam("pageSize", req.PageSize)
 	}

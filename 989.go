@@ -69,8 +69,8 @@ func (a *Api) LandMergeCheckGetList(ctx context.Context, req *LandMergeCheckGetL
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageIndex != "" {
 		c.SetQueryParam("pageIndex", req.PageIndex)
 	}
@@ -146,8 +146,8 @@ func (a *Api) LandMergeCheckGetPurchaseDetail(ctx context.Context, req *LandMerg
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("landPurId", req.LandPurID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("landPurId", req.LandPurID)
 
 	reply, err := c.SetResult(&resp).Get("/LandMergeCheck/GetPurchaseDetail")
 	if err != nil {
@@ -210,8 +210,8 @@ func (a *Api) LandMergeCheckGetPublishDetail(ctx context.Context, req *LandMerge
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("landPubId", req.LandPubID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("landPubId", req.LandPubID)
 
 	reply, err := c.SetResult(&resp).Get("/LandMergeCheck/GetPublishDetail")
 	if err != nil {

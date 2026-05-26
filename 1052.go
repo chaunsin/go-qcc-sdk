@@ -71,8 +71,8 @@ func (a *Api) ShixinDetailGetDetail(ctx context.Context, req *ShixinDetailGetDet
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/ShixinDetail/GetDetail")
 	if err != nil {

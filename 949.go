@@ -64,8 +64,8 @@ func (a *Api) AcctScanGetInfo(ctx context.Context, req *AcctScanGetInfoReq) (*Ac
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 
 	reply, err := c.SetResult(&resp).Get("/AcctScan/GetInfo")
 	if err != nil {

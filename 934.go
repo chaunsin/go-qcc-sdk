@@ -84,8 +84,8 @@ func (a *Api) HistoryChattelMortgageCheckGetList(ctx context.Context, req *Histo
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageIndex != "" {
 		c.SetQueryParam("pageIndex", req.PageIndex)
 	}
@@ -174,9 +174,9 @@ func (a *Api) HistoryChattelMortgageCheckGetDetail(ctx context.Context, req *His
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("keyNo", req.KeyNo)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("keyNo", req.KeyNo).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/HistoryChattelMortgageCheck/GetDetail")
 	if err != nil {

@@ -58,8 +58,8 @@ func (a *Api) LiquidationCheckGetDetail(ctx context.Context, req *LiquidationChe
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 
 	reply, err := c.SetResult(&resp).Get("/LiquidationCheck/GetDetail")
 	if err != nil {

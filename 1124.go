@@ -25,7 +25,6 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
 
@@ -107,9 +106,9 @@ func (a *Api) TaxDataSendCode(ctx context.Context, req *TaxDataSendCodeReq) (*Ta
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("orderNo", req.OrderNo)
-	c.SetQueryParam("verifyCode", req.VerifyCode)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("orderNo", req.OrderNo).
+		SetQueryParam("verifyCode", req.VerifyCode)
 
 	reply, err := c.SetResult(&resp).Get("/TaxData/SendCode")
 	if err != nil {
@@ -139,20 +138,237 @@ type TaxDataGetDataRespResult struct {
 }
 
 type TaxDataGetDataRespResultData struct {
-	FinancialIndexList   []json.RawMessage `json:"FinancialIndexList"`
-	DeclarationDetail    json.RawMessage   `json:"DeclarationDetail"`
-	CollectionDetail     json.RawMessage   `json:"CollectionDetail"`
-	SaleList             []json.RawMessage `json:"SaleList"`
-	TaxData              json.RawMessage   `json:"TaxData"`
-	TaxBurdenRateList    []json.RawMessage `json:"TaxBurdenRateList"`
-	FinancialList        []json.RawMessage `json:"FinancialList"`
-	SupplierCustomerList []json.RawMessage `json:"SupplierCustomerList"`
-	TopCustomerList      []json.RawMessage `json:"TopCustomerList"`
-	TopSupplierList      []json.RawMessage `json:"TopSupplierList"`
-	BreakLawDetailList   []json.RawMessage `json:"BreakLawDetailList"`
-	BreakLawSummaryList  []json.RawMessage `json:"BreakLawSummaryList"`
-	ExpenseDetail        json.RawMessage   `json:"ExpenseDetail"`
-	CashFlowList         []json.RawMessage `json:"CashFlowList"`
+	FinancialIndexList   []TaxDataFinancialIndexItem   `json:"FinancialIndexList"`
+	DeclarationDetail    TaxDataDeclarationDetail      `json:"DeclarationDetail"`
+	CollectionDetail     TaxDataCollectionDetail       `json:"CollectionDetail"`
+	SaleList             []TaxDataYearAmountList       `json:"SaleList"`
+	TaxData              TaxDataTaxData                `json:"TaxData"`
+	TaxBurdenRateList    []TaxDataTaxBurdenRateItem    `json:"TaxBurdenRateList"`
+	FinancialList        []TaxDataFinancialItem        `json:"FinancialList"`
+	SupplierCustomerList []TaxDataSupplierCustomerItem `json:"SupplierCustomerList"`
+	TopCustomerList      []TaxDataTopCustomerItem      `json:"TopCustomerList"`
+	TopSupplierList      []TaxDataTopSupplierItem      `json:"TopSupplierList"`
+	BreakLawDetailList   []TaxDataBreakLawDetailItem   `json:"BreakLawDetailList"`
+	BreakLawSummaryList  []TaxDataBreakLawSummaryItem  `json:"BreakLawSummaryList"`
+	ExpenseDetail        TaxDataExpenseDetail          `json:"ExpenseDetail"`
+	CashFlowList         []TaxDataCashFlowItem         `json:"CashFlowList"`
+}
+
+type TaxDataFinancialIndexItem struct {
+	IndexName string                       `json:"IndexName"`
+	ValueList []TaxDataFinancialIndexValue `json:"ValueList"`
+}
+
+type TaxDataFinancialIndexValue struct {
+	Date  string `json:"Date"`
+	Value string `json:"Value"`
+}
+
+type TaxDataDeclarationDetail struct {
+	CorporateInTaxDeclareList []TaxDataCorporateInTaxDeclareItem `json:"CorporateInTaxDeclareList"`
+	ValueAddedTaxDeclareList  []TaxDataValueAddedTaxDeclareItem  `json:"ValueAddedTaxDeclareList"`
+	OtherTaxDeclareList       []TaxDataOtherTaxDeclareItem       `json:"OtherTaxDeclareList"`
+}
+
+type TaxDataCorporateInTaxDeclareItem struct {
+	ThisYearSaleRevenue      string `json:"ThisYearSaleRevenue"`
+	ThisYearCumulativeProfit string `json:"ThisYearCumulativeProfit"`
+	StartDate                string `json:"StartDate"`
+	EndDate                  string `json:"EndDate"`
+	TaxPayable               string `json:"TaxPayable"`
+	WithholdingTax           string `json:"WithholdingTax"`
+	TaxCompensate            string `json:"TaxCompensate"`
+	TaxDeduction             string `json:"TaxDeduction"`
+}
+
+type TaxDataValueAddedTaxDeclareItem struct {
+	AllSaleRevenue       string `json:"AllSaleRevenue"`
+	AllCumulativeRevenue string `json:"AllCumulativeRevenue"`
+	StartDate            string `json:"StartDate"`
+	EndDate              string `json:"EndDate"`
+	TaxPayable           string `json:"TaxPayable"`
+	WithholdingTax       string `json:"WithholdingTax"`
+	TaxCompensate        string `json:"TaxCompensate"`
+	TaxDeduction         string `json:"TaxDeduction"`
+}
+
+type TaxDataOtherTaxDeclareItem struct {
+	LevyItemCode   string `json:"LevyItemCode"`
+	LevyItemValue  string `json:"LevyItemValue"`
+	TaxBasis       string `json:"TaxBasis"`
+	StartDate      string `json:"StartDate"`
+	EndDate        string `json:"EndDate"`
+	TaxPayable     string `json:"TaxPayable"`
+	WithholdingTax string `json:"WithholdingTax"`
+	TaxCompensate  string `json:"TaxCompensate"`
+	TaxDeduction   string `json:"TaxDeduction"`
+}
+
+type TaxDataCollectionDetail struct {
+	CorporateInTaxCollectionList []TaxDataCorporateInTaxCollectionItem `json:"CorporateInTaxCollectionList"`
+	ValueAddedTaxCollectionList  []TaxDataValueAddedTaxCollectionItem  `json:"ValueAddedTaxCollectionList"`
+	OtherTaxCollectionList       []TaxDataOtherTaxCollectionItem       `json:"OtherTaxCollectionList"`
+}
+
+type TaxDataCorporateInTaxCollectionItem struct {
+	ThisYearCumulativeProfit string `json:"ThisYearCumulativeProfit"`
+	StartDate                string `json:"StartDate"`
+	EndDate                  string `json:"EndDate"`
+	PaymentLimitDate         string `json:"PaymentLimitDate"`
+	PaymentDate              string `json:"PaymentDate"`
+	TaxType                  string `json:"TaxType"`
+	TaxRate                  string `json:"TaxRate"`
+	ActualAmount             string `json:"ActualAmount"`
+}
+
+type TaxDataValueAddedTaxCollectionItem struct {
+	SaleRevenue      string `json:"SaleRevenue"`
+	StartDate        string `json:"StartDate"`
+	EndDate          string `json:"EndDate"`
+	PaymentLimitDate string `json:"PaymentLimitDate"`
+	PaymentDate      string `json:"PaymentDate"`
+	TaxType          string `json:"TaxType"`
+	TaxRate          string `json:"TaxRate"`
+	ActualAmount     string `json:"ActualAmount"`
+}
+
+type TaxDataOtherTaxCollectionItem struct {
+	LevyItemCode     string `json:"LevyItemCode"`
+	LevyItemValue    string `json:"LevyItemValue"`
+	TaxBasis         string `json:"TaxBasis"`
+	StartDate        string `json:"StartDate"`
+	EndDate          string `json:"EndDate"`
+	PaymentLimitDate string `json:"PaymentLimitDate"`
+	PaymentDate      string `json:"PaymentDate"`
+	TaxType          string `json:"TaxType"`
+	TaxRate          string `json:"TaxRate"`
+	ActualAmount     string `json:"ActualAmount"`
+}
+
+type TaxDataTaxData struct {
+	TotalTaxList       []TaxDataYearAmountList     `json:"TotalTaxList"`
+	CorporateInTaxList []TaxDataCorporateInTaxItem `json:"CorporateInTaxList"`
+	ValueAddedTaxList  []TaxDataYearAmountList     `json:"ValueAddedTaxList"`
+	OtherTaxList       []TaxDataOtherTaxItem       `json:"OtherTaxList"`
+}
+
+type TaxDataYearAmountList struct {
+	Year     string                   `json:"Year"`
+	DataList []TaxDataMonthAmountItem `json:"DataList"`
+}
+
+type TaxDataMonthAmountItem struct {
+	Month  string `json:"Month"`
+	Amount string `json:"Amount"`
+}
+
+type TaxDataCorporateInTaxItem struct {
+	Year              string                     `json:"Year"`
+	AnnualTax         string                     `json:"AnnualTax"`
+	QuarterlyDataList []TaxDataQuarterAmountItem `json:"QuarterlyDataList"`
+}
+
+type TaxDataQuarterAmountItem struct {
+	Quarter string `json:"Quarter"`
+	Amount  string `json:"Amount"`
+}
+
+type TaxDataOtherTaxItem struct {
+	LevyItemCode  string                  `json:"LevyItemCode"`
+	LevyItemValue string                  `json:"LevyItemValue"`
+	YearDataList  []TaxDataYearAmountList `json:"YearDataList"`
+}
+
+type TaxDataTaxBurdenRateItem struct {
+	LevyItemCode  string                      `json:"LevyItemCode"`
+	LevyItemValue string                      `json:"LevyItemValue"`
+	DataList      []TaxDataTaxBurdenRateValue `json:"DataList"`
+}
+
+type TaxDataTaxBurdenRateValue struct {
+	Year  string `json:"Year"`
+	Ratio string `json:"Ratio"`
+}
+
+type TaxDataFinancialItem struct {
+	Type        string                    `json:"Type"`
+	TypeValue   string                    `json:"TypeValue"`
+	SubjectList []TaxDataFinancialSubject `json:"SubjectList"`
+}
+
+type TaxDataFinancialSubject struct {
+	Subject     string                  `json:"Subject"`
+	RevenueList []TaxDataYearAmountItem `json:"RevenueList"`
+}
+
+type TaxDataYearAmountItem struct {
+	Year   string `json:"Year"`
+	Amount string `json:"Amount"`
+}
+
+type TaxDataBreakLawDetailItem struct {
+	LimitChangeState string `json:"LimitChangeState"`
+	RegistrationDate string `json:"RegistrationDate"`
+	MainFact         string `json:"MainFact"`
+	BreakType        string `json:"BreakType"`
+	BreakStatus      string `json:"BreakStatus"`
+}
+
+type TaxDataBreakLawSummaryItem struct {
+	GeneralCount    string `json:"GeneralCount"`
+	Date            string `json:"Date"`
+	SeriousCount    string `json:"SeriousCount"`
+	InspectionCount string `json:"InspectionCount"`
+}
+
+type TaxDataSupplierCustomerItem struct {
+	Type         string                            `json:"Type"`
+	TypeValue    string                            `json:"TypeValue"`
+	YearDataList []TaxDataSupplierCustomerYearData `json:"YearDataList"`
+}
+
+type TaxDataSupplierCustomerYearData struct {
+	Year                     string                        `json:"Year"`
+	SupplierCustomerInfoList []TaxDataSupplierCustomerInfo `json:"SupplierCustomerInfoList"`
+}
+
+type TaxDataSupplierCustomerInfo struct {
+	Name       string `json:"Name"`
+	Amount     string `json:"Amount"`
+	Proportion string `json:"Proportion"`
+}
+
+type TaxDataTopCustomerItem struct {
+	Year               string `json:"Year"`
+	RepeatCount        string `json:"RepeatCount"`
+	RepeatAmount       string `json:"RepeatAmont"`
+	TotalAmount        string `json:"TotalAmount"`
+	PurchaseProportion string `json:"PurchaseProportion"`
+}
+
+type TaxDataTopSupplierItem struct {
+	Year               string `json:"Year"`
+	RepeatCount        string `json:"RepeatCount"`
+	TotalAmount        string `json:"TotalAmount"`
+	SupplierProportion string `json:"SupplierProportion"`
+}
+
+type TaxDataExpenseDetail struct {
+	ElectricityExpenseList         []TaxDataExpenseYearAmountList `json:"ElectricityExpenseList"`
+	WaterExpenseList               []TaxDataExpenseYearAmountList `json:"WaterExpenseList"`
+	GasExpenseList                 []TaxDataExpenseYearAmountList `json:"GasExpenseList"`
+	HouseRentalExpenseList         []TaxDataExpenseYearAmountList `json:"HouseRentalExpenseList"`
+	TransportAndStorageExpenseList []TaxDataExpenseYearAmountList `json:"TransportAndStorageExpenseList"`
+}
+
+type TaxDataExpenseYearAmountList struct {
+	Year     string                   `json:"Year"`
+	DataList []TaxDataMonthAmountItem `json:"DataList"`
+}
+
+type TaxDataCashFlowItem struct {
+	Subject     string                  `json:"Subject"`
+	RevenueList []TaxDataYearAmountItem `json:"RevenueList"`
 }
 
 // TaxDataGetData 数据获取 https://openapi.qcc.com/dataApi/1124
@@ -166,8 +382,8 @@ func (a *Api) TaxDataGetData(ctx context.Context, req *TaxDataGetDataReq) (*TaxD
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("orderNo", req.OrderNo)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("orderNo", req.OrderNo)
 
 	reply, err := c.SetResult(&resp).Get("/TaxData/GetData")
 	if err != nil {

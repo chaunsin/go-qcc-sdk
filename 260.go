@@ -54,8 +54,8 @@ func (a *Api) ReportCreateReport(ctx context.Context, req *ReportCreateReportReq
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("keyNo", req.KeyNo)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("keyNo", req.KeyNo)
 	if req.ReportFormat != "" {
 		c.SetQueryParam("reportFormat", req.ReportFormat)
 	}
@@ -98,8 +98,8 @@ func (a *Api) ReportGetReportInfo(ctx context.Context, req *ReportGetReportInfoR
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("orderNo", req.OrderNo)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("orderNo", req.OrderNo)
 
 	reply, err := c.SetResult(&resp).Get("/Report/GetReportInfo")
 	if err != nil {

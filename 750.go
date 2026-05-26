@@ -67,8 +67,8 @@ func (a *Api) PublishNoticeCheckGetList(ctx context.Context, req *PublishNoticeC
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageIndex != "" {
 		c.SetQueryParam("pageIndex", req.PageIndex)
 	}

@@ -89,9 +89,9 @@ func (a *Api) ShopInfoGetInfo(ctx context.Context, req *ShopInfoGetInfoReq) (*Sh
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("platformId", req.PlatformID)
-	c.SetQueryParam("shopId", req.ShopID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("platformId", req.PlatformID).
+		SetQueryParam("shopId", req.ShopID)
 	if req.DataMonth != "" {
 		c.SetQueryParam("dataMonth", req.DataMonth)
 	}

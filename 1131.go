@@ -54,9 +54,9 @@ func (a *Api) HKDocCreateOrder(ctx context.Context, req *HKDocCreateOrderReq) (*
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
-	c.SetQueryParam("docNumber", req.DocNumber)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey).
+		SetQueryParam("docNumber", req.DocNumber)
 
 	reply, err := c.SetResult(&resp).Get("/HKDoc/CreateOrder")
 	if err != nil {
@@ -96,8 +96,8 @@ func (a *Api) HKDocGetData(ctx context.Context, req *HKDocGetDataReq) (*HKDocGet
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("orderNo", req.OrderNo)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("orderNo", req.OrderNo)
 
 	reply, err := c.SetResult(&resp).Get("/HKDoc/GetData")
 	if err != nil {

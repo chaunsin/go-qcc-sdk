@@ -62,8 +62,8 @@ func (a *Api) ExceptionCheckGetList(ctx context.Context, req *ExceptionCheckGetL
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 
 	reply, err := c.SetResult(&resp).Get("/ExceptionCheck/GetList")
 	if err != nil {

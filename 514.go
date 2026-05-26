@@ -74,8 +74,8 @@ func (a *Api) PatentV4Search(ctx context.Context, req *PatentV4SearchReq) (*Pate
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.Ipc != "" {
 		c.SetQueryParam("ipc", req.Ipc)
 	}
@@ -156,8 +156,8 @@ func (a *Api) PatentV4GetDetails(ctx context.Context, req *PatentV4GetDetailsReq
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/PatentV4/GetDetails")
 	if err != nil {
@@ -226,8 +226,8 @@ func (a *Api) PatentV4SearchMultiPatents(ctx context.Context, req *PatentV4Searc
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageSize > 0 {
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}

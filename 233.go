@@ -62,8 +62,8 @@ func (a *Api) CopyRightSearchCopyRight(ctx context.Context, req *CopyRightSearch
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageSize > 0 {
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
@@ -188,8 +188,8 @@ func (a *Api) CopyRightSearchSoftwareCr(ctx context.Context, req *CopyRightSearc
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.PageSize > 0 {
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}

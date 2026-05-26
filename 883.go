@@ -76,8 +76,8 @@ func (a *Api) GroupMemberGetList(ctx context.Context, req *GroupMemberGetListReq
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("groupId", req.GroupID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("groupId", req.GroupID)
 	if req.PageIndex != "" {
 		c.SetQueryParam("pageIndex", req.PageIndex)
 	}

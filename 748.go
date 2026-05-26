@@ -63,8 +63,8 @@ func (a *Api) SeriousIllegalCheckGetList(ctx context.Context, req *SeriousIllega
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 
 	reply, err := c.SetResult(&resp).Get("/SeriousIllegalCheck/GetList")
 	if err != nil {

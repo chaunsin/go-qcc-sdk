@@ -58,8 +58,8 @@ func (a *Api) ZhixingDetailGetDetail(ctx context.Context, req *ZhixingDetailGetD
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/ZhixingDetail/GetDetail")
 	if err != nil {

@@ -72,8 +72,8 @@ func (a *Api) CompanyNewsSearchNews(ctx context.Context, req *CompanyNewsSearchN
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.EmotionType != "" {
 		c.SetQueryParam("emotionType", req.EmotionType)
 	}
@@ -128,8 +128,8 @@ func (a *Api) CompanyNewsGetNewsDetail(ctx context.Context, req *CompanyNewsGetN
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("id", req.ID)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("id", req.ID)
 
 	reply, err := c.SetResult(&resp).Get("/CompanyNews/GetNewsDetail")
 	if err != nil {

@@ -70,8 +70,8 @@ func (a *Api) SupplierGetList(ctx context.Context, req *SupplierGetListReq) (*Su
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
-		SetQueryParam("key", a.cfg.Key)
-	c.SetQueryParam("searchKey", req.SearchKey)
+		SetQueryParam("key", a.cfg.Key).
+		SetQueryParam("searchKey", req.SearchKey)
 	if req.Year != "" {
 		c.SetQueryParam("year", req.Year)
 	}
