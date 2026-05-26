@@ -25,6 +25,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 )
 
@@ -100,34 +101,38 @@ type TmGetDetailsResp struct {
 }
 
 type TmGetDetailsRespResult struct {
-	AddressCn       string   `json:"AddressCn"`
-	AddressEn       string   `json:"AddressEn"`
-	AnnouncementDat string   `json:"AnnouncementDat"`
-	Applicant1      string   `json:"Applicant1"`
-	Applicant2      string   `json:"Applicant2"`
-	Color           string   `json:"Color"`
-	RegDate         string   `json:"RegDate"`
-	HouQiZhiDingDat string   `json:"HouQiZhiDingDat"`
-	GuoJiZhuCeDate  string   `json:"GuoJiZhuCeDate"`
-	YouXianQuanDate string   `json:"YouXianQuanDate"`
-	ValidPeriod     string   `json:"ValidPeriod"`
-	FlowItems       []any    `json:"FlowItems"`
-	ListGroupItems  []string `json:"ListGroupItems"`
-	ID              string   `json:"Id"`
-	RegNo           string   `json:"RegNo"`
-	Name            string   `json:"Name"`
-	AppDate         string   `json:"AppDate"`
-	ApplicantCn     string   `json:"ApplicantCn"`
-	ApplicantEn     string   `json:"ApplicantEn"`
-	Agent           string   `json:"Agent"`
-	FlowStatus      string   `json:"FlowStatus"`
-	FlowStatusDesc  string   `json:"FlowStatusDesc"`
-	HasImage        bool     `json:"HasImage"`
-	ImageURL        string   `json:"ImageUrl"`
-	IsShare         string   `json:"IsShare"`
-	TmType          string   `json:"TmType"`
-	TmStyle         string   `json:"TmStyle"`
-	SimilarGroups   string   `json:"SimilarGroups"`
+	AddressCn         string            `json:"AddressCn"`
+	AddressEn         string            `json:"AddressEn"`
+	AnnouncementIssue string            `json:"AnnouncementIssue"`
+	AnnouncementDate  string            `json:"AnnouncementDate"`
+	Applicant1        string            `json:"Applicant1"`
+	Applicant2        string            `json:"Applicant2"`
+	Color             string            `json:"Color"`
+	RegIssue          string            `json:"RegIssue"`
+	RegDate           string            `json:"RegDate"`
+	HouQiZhiDingDate  string            `json:"HouQiZhiDingDate"`
+	GuoJiZhuCeDate    string            `json:"GuoJiZhuCeDate"`
+	YouXianQuanDate   string            `json:"YouXianQuanDate"`
+	ValidPeriod       string            `json:"ValidPeriod"`
+	FlowItems         []json.RawMessage `json:"FlowItems"`
+	ListGroupItems    []string          `json:"ListGroupItems"`
+	ID                string            `json:"Id"`
+	RegNo             string            `json:"RegNo"`
+	IntCls            int64             `json:"IntCls"`
+	Name              string            `json:"Name"`
+	AppDate           string            `json:"AppDate"`
+	ApplicantCn       string            `json:"ApplicantCn"`
+	ApplicantEn       string            `json:"ApplicantEn"`
+	Agent             string            `json:"Agent"`
+	Status            int64             `json:"Status"`
+	FlowStatus        string            `json:"FlowStatus"`
+	FlowStatusDesc    string            `json:"FlowStatusDesc"`
+	HasImage          bool              `json:"HasImage"`
+	ImageURL          string            `json:"ImageUrl"`
+	IsShare           string            `json:"IsShare"`
+	TmType            string            `json:"TmType"`
+	TmStyle           string            `json:"TmStyle"`
+	SimilarGroups     string            `json:"SimilarGroups"`
 }
 
 // TmGetDetails 商标详情 https://openapi.qcc.com/dataApi/231

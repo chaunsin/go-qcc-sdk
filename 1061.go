@@ -52,7 +52,7 @@ type CaseFilingDetailGetDetailRespResult struct {
 	CaseStatus     string                                                  `json:"CaseStatus"`
 	ProsecutorList []CaseFilingDetailGetDetailRespResultProsecutorListItem `json:"ProsecutorList"`
 	DefendantList  []CaseFilingDetailGetDetailRespResultDefendantListItem  `json:"DefendantList"`
-	OutSiderList   []any                                                   `json:"OutSiderList"`
+	OutSiderList   []CaseFilingDetailGetDetailRespResultOutSiderListItem   `json:"OutSiderList"`
 	RoleList       []CaseFilingDetailGetDetailRespResultRoleListItem       `json:"RoleList"`
 }
 
@@ -62,6 +62,11 @@ type CaseFilingDetailGetDetailRespResultProsecutorListItem struct {
 }
 
 type CaseFilingDetailGetDetailRespResultDefendantListItem struct {
+	KeyNo string `json:"KeyNo"`
+	Name  string `json:"Name"`
+}
+
+type CaseFilingDetailGetDetailRespResultOutSiderListItem struct {
 	KeyNo string `json:"KeyNo"`
 	Name  string `json:"Name"`
 }

@@ -48,8 +48,14 @@ type SimpleCancelCheckGetInfoRespResultDataItem struct {
 	Registration      string                                                           `json:"Registration"`
 	PublicDate        string                                                           `json:"PublicDate"`
 	DocURL            string                                                           `json:"DocUrl"`
-	DissentList       []any                                                            `json:"DissentList"`
+	DissentList       []SimpleCancelCheckGetInfoRespResultDataItemDissentListItem      `json:"DissentList"`
 	CancellationList  []SimpleCancelCheckGetInfoRespResultDataItemCancellationListItem `json:"CancellationList"`
+}
+
+type SimpleCancelCheckGetInfoRespResultDataItemDissentListItem struct {
+	DissentPerson  string `json:"DissentPerson"`
+	DissentContent string `json:"DissentContent"`
+	DissentDate    string `json:"DissentDate"`
 }
 
 type SimpleCancelCheckGetInfoRespResultDataItemCancellationListItem struct {

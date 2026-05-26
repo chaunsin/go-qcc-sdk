@@ -101,33 +101,38 @@ type LandMergeCheckGetPurchaseDetailResp struct {
 }
 
 type LandMergeCheckGetPurchaseDetailRespResult struct {
-	ID              string `json:"Id"`
-	AdminArea       string `json:"AdminArea"`
-	ElecSuNum       string `json:"ElecSuNum"`
-	ProjectName     string `json:"ProjectName"`
-	Address         string `json:"Address"`
-	Area            string `json:"Area"`
-	LandSource      string `json:"LandSource"`
-	LandUse         string `json:"LandUse"`
-	SupplyWay       string `json:"SupplyWay"`
-	LandUseYears    string `json:"LandUseYears"`
-	Industry        string `json:"Industry"`
-	LandLevel       string `json:"LandLevel"`
-	TransAmt        string `json:"TransAmt"`
-	LandHolder      any    `json:"LandHolder"`
-	AgreeLandDate   string `json:"AgreeLandDate"`
-	AgreeStartDate  string `json:"AgreeStartDate"`
-	AgreeEndDate    string `json:"AgreeEndDate"`
-	ActualStartDate string `json:"ActualStartDate"`
-	ActualEndDate   string `json:"ActualEndDate"`
-	ApprovalUnit    string `json:"ApprovalUnit"`
-	SignDate        string `json:"SignDate"`
-	PaymentRound    string `json:"PaymentRound"`
-	AgreePayDate    string `json:"AgreePayDate"`
-	AgreePayAmt     string `json:"AgreePayAmt"`
-	Remarks         string `json:"Remarks"`
-	AgreeRateMin    string `json:"AgreeRateMin"`
-	AgreeRateMax    string `json:"AgreeRateMax"`
+	ID              string                                              `json:"Id"`
+	AdminArea       string                                              `json:"AdminArea"`
+	ElecSuNum       string                                              `json:"ElecSuNum"`
+	ProjectName     string                                              `json:"ProjectName"`
+	Address         string                                              `json:"Address"`
+	Area            string                                              `json:"Area"`
+	LandSource      string                                              `json:"LandSource"`
+	LandUse         string                                              `json:"LandUse"`
+	SupplyWay       string                                              `json:"SupplyWay"`
+	LandUseYears    string                                              `json:"LandUseYears"`
+	Industry        string                                              `json:"Industry"`
+	LandLevel       string                                              `json:"LandLevel"`
+	TransAmt        string                                              `json:"TransAmt"`
+	LandHolder      LandMergeCheckGetPurchaseDetailRespResultLandHolder `json:"LandHolder"`
+	AgreeLandDate   string                                              `json:"AgreeLandDate"`
+	AgreeStartDate  string                                              `json:"AgreeStartDate"`
+	AgreeEndDate    string                                              `json:"AgreeEndDate"`
+	ActualStartDate string                                              `json:"ActualStartDate"`
+	ActualEndDate   string                                              `json:"ActualEndDate"`
+	ApprovalUnit    string                                              `json:"ApprovalUnit"`
+	SignDate        string                                              `json:"SignDate"`
+	PaymentRound    string                                              `json:"PaymentRound"`
+	AgreePayDate    string                                              `json:"AgreePayDate"`
+	AgreePayAmt     string                                              `json:"AgreePayAmt"`
+	Remarks         string                                              `json:"Remarks"`
+	AgreeRateMin    string                                              `json:"AgreeRateMin"`
+	AgreeRateMax    string                                              `json:"AgreeRateMax"`
+}
+
+type LandMergeCheckGetPurchaseDetailRespResultLandHolder struct {
+	KeyNo string `json:"KeyNo"`
+	Name  string `json:"Name"`
 }
 
 // LandMergeCheckGetPurchaseDetail 购地信息详情 https://openapi.qcc.com/dataApi/989
@@ -167,26 +172,31 @@ type LandMergeCheckGetPublishDetailResp struct {
 }
 
 type LandMergeCheckGetPublishDetailRespResult struct {
-	ID            string `json:"Id"`
-	LandNo        string `json:"LandNo"`
-	Address       string `json:"Address"`
-	Acreage       string `json:"Acreage"`
-	Purpose       string `json:"Purpose"`
-	TradePrice    string `json:"TradePrice"`
-	SellYears     string `json:"SellYears"`
-	ProjectName   string `json:"ProjectName"`
-	AssigneeUnit  any    `json:"AssigneeUnit"`
-	Remarks       string `json:"Remarks"`
-	PublishTerm   string `json:"PublishTerm"`
-	PublishGov    string `json:"PublishGov"`
-	PublishDate   string `json:"PublishDate"`
-	Explains      string `json:"Explains"`
-	ContactUnit   string `json:"ContactUnit"`
-	UnitAddress   string `json:"UnitAddress"`
-	PostCode      string `json:"PostCode"`
-	ContactNumber string `json:"ContactNumber"`
-	ContactPerson string `json:"ContactPerson"`
-	Email         string `json:"Email"`
+	ID            string                                               `json:"Id"`
+	LandNo        string                                               `json:"LandNo"`
+	Address       string                                               `json:"Address"`
+	Acreage       string                                               `json:"Acreage"`
+	Purpose       string                                               `json:"Purpose"`
+	TradePrice    string                                               `json:"TradePrice"`
+	SellYears     string                                               `json:"SellYears"`
+	ProjectName   string                                               `json:"ProjectName"`
+	AssigneeUnit  LandMergeCheckGetPublishDetailRespResultAssigneeUnit `json:"AssigneeUnit"`
+	Remarks       string                                               `json:"Remarks"`
+	PublishTerm   string                                               `json:"PublishTerm"`
+	PublishGov    string                                               `json:"PublishGov"`
+	PublishDate   string                                               `json:"PublishDate"`
+	Explains      string                                               `json:"Explains"`
+	ContactUnit   string                                               `json:"ContactUnit"`
+	UnitAddress   string                                               `json:"UnitAddress"`
+	PostCode      string                                               `json:"PostCode"`
+	ContactNumber string                                               `json:"ContactNumber"`
+	ContactPerson string                                               `json:"ContactPerson"`
+	Email         string                                               `json:"Email"`
+}
+
+type LandMergeCheckGetPublishDetailRespResultAssigneeUnit struct {
+	KeyNo string `json:"KeyNo"`
+	Name  string `json:"Name"`
 }
 
 // LandMergeCheckGetPublishDetail 地块公示详情 https://openapi.qcc.com/dataApi/989

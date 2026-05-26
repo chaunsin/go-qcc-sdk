@@ -25,6 +25,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 )
 
@@ -78,8 +79,8 @@ type HKDataGetDataResp struct {
 }
 
 type HKDataGetDataRespResult struct {
-	DataStatus string `json:"DataStatus"`
-	Data       any    `json:"Data"`
+	DataStatus string          `json:"DataStatus"`
+	Data       json.RawMessage `json:"Data"`
 }
 
 // HKDataGetData 数据获取 https://openapi.qcc.com/dataApi/991

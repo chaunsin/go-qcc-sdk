@@ -80,6 +80,8 @@ type ECIRecentPartnerGetListRespResult struct {
 }
 
 // ECIRecentPartnerGetList 股东信息(最新公示&工商登记) https://openapi.qcc.com/dataApi/1026
+//
+// Deprecated: ApiCode 1026 is not present in the current QCC OpenAPI index; keep only for compatibility.
 func (a *Api) ECIRecentPartnerGetList(ctx context.Context, req *ECIRecentPartnerGetListReq) (*ECIRecentPartnerGetListResp, error) {
 	var resp ECIRecentPartnerGetListResp
 	token, unix, err := a.auth()

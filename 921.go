@@ -47,9 +47,9 @@ type HistoryEciCheckGetInfoRespResultData struct {
 	RegistCapiList  []HistoryEciCheckGetInfoRespResultDataRegistCapiListItem  `json:"RegistCapiList"`
 	AddressList     []HistoryEciCheckGetInfoRespResultDataAddressListItem     `json:"AddressList"`
 	ScopeList       []HistoryEciCheckGetInfoRespResultDataScopeListItem       `json:"ScopeList"`
-	TelList         []any                                                     `json:"TelList"`
-	BranchList      []any                                                     `json:"BranchList"`
-	EmailList       []any                                                     `json:"EmailList"`
+	TelList         []HistoryEciCheckGetInfoRespResultDataTelListItem         `json:"TelList"`
+	BranchList      []HistoryEciCheckGetInfoRespResultDataBranchListItem      `json:"BranchList"`
+	EmailList       []HistoryEciCheckGetInfoRespResultDataEmailListItem       `json:"EmailList"`
 }
 
 type HistoryEciCheckGetInfoRespResultDataCompanyNameListItem struct {
@@ -73,6 +73,22 @@ type HistoryEciCheckGetInfoRespResultDataAddressListItem struct {
 type HistoryEciCheckGetInfoRespResultDataScopeListItem struct {
 	Oldvalue   string `json:"Oldvalue"`
 	StartDate  string `json:"StartDate"`
+	ChangeDate string `json:"ChangeDate"`
+}
+
+type HistoryEciCheckGetInfoRespResultDataTelListItem struct {
+	Oldvalue   string `json:"Oldvalue"`
+	ChangeDate string `json:"ChangeDate"`
+}
+
+type HistoryEciCheckGetInfoRespResultDataBranchListItem struct {
+	Oldvalue   string `json:"Oldvalue"`
+	ChangeDate string `json:"ChangeDate"`
+	KeyNo      string `json:"KeyNo"`
+}
+
+type HistoryEciCheckGetInfoRespResultDataEmailListItem struct {
+	Oldvalue   string `json:"Oldvalue"`
 	ChangeDate string `json:"ChangeDate"`
 }
 

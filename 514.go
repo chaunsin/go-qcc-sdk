@@ -115,28 +115,34 @@ type PatentV4GetDetailsResp struct {
 }
 
 type PatentV4GetDetailsRespResult struct {
-	DocumentTypes   string   `json:"DocumentTypes"`
-	Agent           string   `json:"Agent"`
-	LegalStatusDate string   `json:"LegalStatusDate"`
-	PrimaryExaminer string   `json:"PrimaryExaminer"`
-	AssiantExaminer string   `json:"AssiantExaminer"`
-	Cites           string   `json:"Cites"`
-	OtherReferences string   `json:"OtherReferences"`
-	PatentImage     string   `json:"PatentImage"`
-	IPCList         []string `json:"IPCList"`
-	ApplicationNumb string   `json:"ApplicationNumb"`
-	ApplicationDate string   `json:"ApplicationDate"`
-	PublicationNumb string   `json:"PublicationNumb"`
-	PublicationDate string   `json:"PublicationDate"`
-	LegalStatusDesc string   `json:"LegalStatusDesc"`
-	Title           string   `json:"Title"`
-	Abstract        string   `json:"Abstract"`
-	Agency          []string `json:"Agency"`
-	KindCodeDesc    string   `json:"KindCodeDesc"`
-	IPCDesc         []string `json:"IPCDesc"`
-	InventorStringL []string `json:"InventorStringL"`
-	AssigneestringL []string `json:"AssigneestringL"`
-	PatentLegalHist any      `json:"PatentLegalHist"`
+	DocumentTypes      string                                               `json:"DocumentTypes"`
+	Agent              string                                               `json:"Agent"`
+	LegalStatusDate    string                                               `json:"LegalStatusDate"`
+	PrimaryExaminer    string                                               `json:"PrimaryExaminer"`
+	AssiantExaminer    string                                               `json:"AssiantExaminer"`
+	Cites              string                                               `json:"Cites"`
+	OtherReferences    string                                               `json:"OtherReferences"`
+	PatentImage        string                                               `json:"PatentImage"`
+	IPCList            []string                                             `json:"IPCList"`
+	ApplicationNumber  string                                               `json:"ApplicationNumber"`
+	ApplicationDate    string                                               `json:"ApplicationDate"`
+	PublicationNumber  string                                               `json:"PublicationNumber"`
+	PublicationDate    string                                               `json:"PublicationDate"`
+	LegalStatusDesc    string                                               `json:"LegalStatusDesc"`
+	Title              string                                               `json:"Title"`
+	Abstract           string                                               `json:"Abstract"`
+	Agency             []string                                             `json:"Agency"`
+	KindCodeDesc       string                                               `json:"KindCodeDesc"`
+	IPCDesc            []string                                             `json:"IPCDesc"`
+	InventorStringList []string                                             `json:"InventorStringList"`
+	AssigneestringList []string                                             `json:"AssigneestringList"`
+	PatentLegalHistory []PatentV4GetDetailsRespResultPatentLegalHistoryItem `json:"PatentLegalHistory"`
+}
+
+type PatentV4GetDetailsRespResultPatentLegalHistoryItem struct {
+	Desc            string `json:"Desc"`
+	LegalStatus     string `json:"LegalStatus"`
+	LegalStatusDate string `json:"LegalStatusDate"`
 }
 
 // PatentV4GetDetails 专利详情查询 https://openapi.qcc.com/dataApi/514
@@ -192,21 +198,21 @@ type PatentV4SearchMultiPatentsResp struct {
 }
 
 type PatentV4SearchMultiPatentsRespResult struct {
-	ID              string   `json:"Id"`
-	LegalStatus     string   `json:"LegalStatus"`
-	KindCode        string   `json:"KindCode"`
-	IPCList         []string `json:"IPCList"`
-	ApplicationNumb string   `json:"ApplicationNumb"`
-	ApplicationDate string   `json:"ApplicationDate"`
-	PublicationNumb string   `json:"PublicationNumb"`
-	PublicationDate string   `json:"PublicationDate"`
-	LegalStatusDesc string   `json:"LegalStatusDesc"`
-	Title           string   `json:"Title"`
-	Agency          []string `json:"Agency"`
-	KindCodeDesc    string   `json:"KindCodeDesc"`
-	IPCDesc         []string `json:"IPCDesc"`
-	InventorStringL []string `json:"InventorStringL"`
-	AssigneestringL []string `json:"AssigneestringL"`
+	ID                 string   `json:"Id"`
+	LegalStatus        string   `json:"LegalStatus"`
+	KindCode           string   `json:"KindCode"`
+	IPCList            []string `json:"IPCList"`
+	ApplicationNumber  string   `json:"ApplicationNumber"`
+	ApplicationDate    string   `json:"ApplicationDate"`
+	PublicationNumber  string   `json:"PublicationNumber"`
+	PublicationDate    string   `json:"PublicationDate"`
+	LegalStatusDesc    string   `json:"LegalStatusDesc"`
+	Title              string   `json:"Title"`
+	Agency             []string `json:"Agency"`
+	KindCodeDesc       string   `json:"KindCodeDesc"`
+	IPCDesc            []string `json:"IPCDesc"`
+	InventorStringList []string `json:"InventorStringList"`
+	AssigneestringList []string `json:"AssigneestringList"`
 }
 
 // PatentV4SearchMultiPatents 公司专利多重查询 https://openapi.qcc.com/dataApi/514

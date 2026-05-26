@@ -57,12 +57,12 @@ type ChattelMortgageCheckGetListRespResultDataItem struct {
 }
 
 type ChattelMortgageCheckGetListRespResultDataItemDetail struct {
-	Pledge        ChattelMortgageCheckGetListRespResultDataItemDetailPledge            `json:"Pledge"`
-	PledgeeList   []ChattelMortgageCheckGetListRespResultDataItemDetailPledgeeListItem `json:"PledgeeList"`
-	SecuredClaim  ChattelMortgageCheckGetListRespResultDataItemDetailSecuredClaim      `json:"SecuredClaim"`
-	GuaranteeList []any                                                                `json:"GuaranteeList"`
-	CancelInfo    any                                                                  `json:"CancelInfo"`
-	ChangeList    any                                                                  `json:"ChangeList"`
+	Pledge        ChattelMortgageCheckGetListRespResultDataItemDetailPledge              `json:"Pledge"`
+	PledgeeList   []ChattelMortgageCheckGetListRespResultDataItemDetailPledgeeListItem   `json:"PledgeeList"`
+	SecuredClaim  ChattelMortgageCheckGetListRespResultDataItemDetailSecuredClaim        `json:"SecuredClaim"`
+	GuaranteeList []ChattelMortgageCheckGetListRespResultDataItemDetailGuaranteeListItem `json:"GuaranteeList"`
+	CancelInfo    ChattelMortgageCheckGetListRespResultDataItemDetailCancelInfo          `json:"CancelInfo"`
+	ChangeList    []ChattelMortgageCheckGetListRespResultDataItemDetailChangeListItem    `json:"ChangeList"`
 }
 
 type ChattelMortgageCheckGetListRespResultDataItemDetailPledge struct {
@@ -83,6 +83,29 @@ type ChattelMortgageCheckGetListRespResultDataItemDetailSecuredClaim struct {
 	AssuranceScope    string `json:"AssuranceScope"`
 	FulfillObligation string `json:"FulfillObligation"`
 	Remark            string `json:"Remark"`
+}
+
+type ChattelMortgageCheckGetListRespResultDataItemDetailGuaranteeListItem struct {
+	Name      string                                                                              `json:"Name"`
+	Ownership string                                                                              `json:"Ownership"`
+	Other     string                                                                              `json:"Other"`
+	Remark    string                                                                              `json:"Remark"`
+	KeyNoList []ChattelMortgageCheckGetListRespResultDataItemDetailGuaranteeListItemKeyNoListItem `json:"KeyNoList"`
+}
+
+type ChattelMortgageCheckGetListRespResultDataItemDetailGuaranteeListItemKeyNoListItem struct {
+	KeyNo string `json:"KeyNo"`
+	Name  string `json:"Name"`
+}
+
+type ChattelMortgageCheckGetListRespResultDataItemDetailCancelInfo struct {
+	CancelDate   string `json:"CancelDate"`
+	CancelReason string `json:"CancelReason"`
+}
+
+type ChattelMortgageCheckGetListRespResultDataItemDetailChangeListItem struct {
+	ChangeDate    string `json:"ChangeDate"`
+	ChangeContent string `json:"ChangeContent"`
 }
 
 type ChattelMortgageCheckGetListRespResultDataItemDebtorInfo struct {

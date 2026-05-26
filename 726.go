@@ -93,12 +93,39 @@ type TelecomLicenseGetDetailResp struct {
 }
 
 type TelecomLicenseGetDetailRespResult struct {
-	ID           string `json:"Id"`
-	EntInfo      any    `json:"EntInfo"`
-	LicenseNo    string `json:"LicenseNo"`
-	IsValid      string `json:"IsValid"`
-	Scope        string `json:"Scope"`
-	AnnualReport any    `json:"AnnualReport"`
+	ID           string                                        `json:"Id"`
+	EntInfo      TelecomLicenseGetDetailRespResultEntInfo      `json:"EntInfo"`
+	LicenseNo    string                                        `json:"LicenseNo"`
+	IsValid      string                                        `json:"IsValid"`
+	Scope        string                                        `json:"Scope"`
+	AnnualReport TelecomLicenseGetDetailRespResultAnnualReport `json:"AnnualReport"`
+}
+
+type TelecomLicenseGetDetailRespResultEntInfo struct {
+	KeyNo       string `json:"KeyNo"`
+	CompanyName string `json:"CompanyName"`
+}
+
+type TelecomLicenseGetDetailRespResultAnnualReport struct {
+	OperInfo       TelecomLicenseGetDetailRespResultAnnualReportOperInfo `json:"OperInfo"`
+	CreditCode     string                                                `json:"CreditCode"`
+	EntInfo        TelecomLicenseGetDetailRespResultEntInfo              `json:"EntInfo"`
+	ReComplaintPer string                                                `json:"ReComplaintPer"`
+	Address        string                                                `json:"Address"`
+	Province       string                                                `json:"Province"`
+	LicenseNo      string                                                `json:"LicenseNo"`
+	Type           string                                                `json:"Type"`
+	ComplaintNum   string                                                `json:"ComplaintNum"`
+	RegistCapi     string                                                `json:"RegistCapi"`
+	EconKind       string                                                `json:"EconKind"`
+	IPOStatus      string                                                `json:"IPOStatus"`
+	Tel            string                                                `json:"Tel"`
+	StockCode      string                                                `json:"StockCode"`
+}
+
+type TelecomLicenseGetDetailRespResultAnnualReportOperInfo struct {
+	OperID   string `json:"OperId"`
+	OperName string `json:"OperName"`
 }
 
 // TelecomLicenseGetDetail 电信许可详情 https://openapi.qcc.com/dataApi/726

@@ -25,6 +25,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 )
 
@@ -101,9 +102,9 @@ type ECICertificationGetCertificationDetailByIDResp struct {
 }
 
 type ECICertificationGetCertificationDetailByIDRespResult struct {
-	ID     string `json:"Id"`
-	Data   any    `json:"Data"`
-	Schema any    `json:"Schema"`
+	ID     string          `json:"Id"`
+	Data   json.RawMessage `json:"Data"`
+	Schema json.RawMessage `json:"Schema"`
 }
 
 // ECICertificationGetCertificationDetailByID 资质证书详情 https://openapi.qcc.com/dataApi/255

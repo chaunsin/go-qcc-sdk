@@ -409,3 +409,7 @@ go.work.sum
 
 # env file
 .env
+
+# Custom
+__pycache__/
+*.py[cod]

@@ -1419,7 +1419,7 @@ func TestGeneratedQCCInterfacesUseExpectedRequests(t *testing.T) {
 			path:   "/CopyRight/SearchSoftwareCr",
 			method: "GET",
 			query:  map[string]string{"searchKey": "test-searchKey", "pageSize": "7", "pageIndex": "7"},
-			result: `{}`,
+			result: `[]`,
 			call: func(api *Api) error {
 				_, err := api.CopyRightSearchSoftwareCr(ctx, &CopyRightSearchSoftwareCrReq{SearchKey: "test-searchKey", PageSize: 7, PageIndex: 7})
 				return err
@@ -1430,7 +1430,7 @@ func TestGeneratedQCCInterfacesUseExpectedRequests(t *testing.T) {
 			path:   "/CopyRight/GetSoftwareCr",
 			method: "GET",
 			query:  map[string]string{"personName": "test-personName", "fullName": "test-fullName", "shortName": "test-shortName", "registeNo": "test-registeNo", "pageSize": "7", "pageIndex": "7"},
-			result: `{}`,
+			result: `[]`,
 			call: func(api *Api) error {
 				_, err := api.CopyRightGetSoftwareCr(ctx, &CopyRightGetSoftwareCrReq{PersonName: "test-personName", FullName: "test-fullName", ShortName: "test-shortName", RegisteNo: "test-registeNo", PageSize: 7, PageIndex: 7})
 				return err
@@ -1654,18 +1654,24 @@ func TestGeneratedQCCInterfacesUseExpectedRequests(t *testing.T) {
 				assert.Equal(t, tt.method, r.Method)
 				assert.NotEmpty(t, r.Header.Get("Token"))
 				assert.NotEmpty(t, r.Header.Get("Timespan"))
-				assert.Equal(t, "test-key", r.URL.Query().Get("key"))
-				for key, value := range tt.query {
-					assert.Equal(t, value, r.URL.Query().Get(key), key)
+				query := r.URL.Query()
+				assert.Equal(t, []string{"test-key"}, query["key"])
+				actualQuery := make(map[string]string, len(query))
+				for key, values := range query {
+					if key == "key" {
+						continue
+					}
+					if assert.Len(t, values, 1, key) {
+						actualQuery[key] = values[0]
+					}
 				}
+				assert.Equal(t, tt.query, actualQuery)
 				if tt.body != nil {
 					raw, err := io.ReadAll(r.Body)
 					assert.NoError(t, err)
 					var body map[string]any
 					assert.NoError(t, json.Unmarshal(raw, &body))
-					for key, value := range tt.body {
-						assert.Equal(t, value, body[key], key)
-					}
+					assert.Equal(t, tt.body, body)
 				}
 				w.Header().Set("Content-Type", "application/json")
 				_, _ = w.Write([]byte(`{"Status":"200","Message":"OK","Result":` + tt.result + `}`))

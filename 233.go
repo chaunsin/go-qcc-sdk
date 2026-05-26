@@ -162,19 +162,19 @@ type CopyRightSearchSoftwareCrReq struct {
 }
 
 type CopyRightSearchSoftwareCrResp struct {
-	Response[CopyRightSearchSoftwareCrRespResult]
+	Response[[]CopyRightSearchSoftwareCrRespResult]
 }
 
 type CopyRightSearchSoftwareCrRespResult struct {
-	Category        string `json:"Category"`
-	PublishDate     string `json:"PublishDate"`
-	VersionNo       string `json:"VersionNo"`
-	RegisterNo      string `json:"RegisterNo"`
-	RegisterAperDat string `json:"RegisterAperDat"`
-	Name            string `json:"Name"`
-	ShortName       string `json:"ShortName"`
-	Owner           string `json:"Owner"`
-	FinishDevelopDa string `json:"FinishDevelopDa"`
+	Category          string `json:"Category"`
+	PublishDate       string `json:"PublishDate"`
+	VersionNo         string `json:"VersionNo"`
+	RegisterNo        string `json:"RegisterNo"`
+	RegisterAperDate  string `json:"RegisterAperDate"`
+	Name              string `json:"Name"`
+	ShortName         string `json:"ShortName"`
+	Owner             string `json:"Owner"`
+	FinishDevelopDate string `json:"FinishDevelopDate"`
 }
 
 // CopyRightSearchSoftwareCr 软件著作权查询 https://openapi.qcc.com/dataApi/233
@@ -226,19 +226,19 @@ type CopyRightGetSoftwareCrReq struct {
 }
 
 type CopyRightGetSoftwareCrResp struct {
-	Response[CopyRightGetSoftwareCrRespResult]
+	Response[[]CopyRightGetSoftwareCrRespResult]
 }
 
 type CopyRightGetSoftwareCrRespResult struct {
-	Category        string `json:"Category"`
-	PublishDate     string `json:"PublishDate"`
-	VersionNo       string `json:"VersionNo"`
-	RegisterNo      string `json:"RegisterNo"`
-	RegisterAperDat string `json:"RegisterAperDat"`
-	Name            string `json:"Name"`
-	ShortName       string `json:"ShortName"`
-	Owner           string `json:"Owner"`
-	FinishDevelopDa string `json:"FinishDevelopDa"`
+	Category          string `json:"Category"`
+	PublishDate       string `json:"PublishDate"`
+	VersionNo         string `json:"VersionNo"`
+	RegisterNo        string `json:"RegisterNo"`
+	RegisterAperDate  string `json:"RegisterAperDate"`
+	Name              string `json:"Name"`
+	ShortName         string `json:"ShortName"`
+	Owner             string `json:"Owner"`
+	FinishDevelopDate string `json:"FinishDevelopDate"`
 }
 
 // CopyRightGetSoftwareCr 软件著作权多重查询 https://openapi.qcc.com/dataApi/233

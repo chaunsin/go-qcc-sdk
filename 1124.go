@@ -25,6 +25,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 )
 
@@ -133,22 +134,25 @@ type TaxDataGetDataResp struct {
 }
 
 type TaxDataGetDataRespResult struct {
-	DataStatus      string `json:"DataStatus"`
-	Data            any    `json:"Data"`
-	TaxBurdenRateLi []any  `json:"TaxBurdenRateLi"`
-	SaleList        []any  `json:"SaleList"`
-	TaxData         any    `json:"TaxData"`
-	DeclarationDeta any    `json:"DeclarationDeta"`
-	CollectionDetai any    `json:"CollectionDetai"`
-	FinancialIndexL []any  `json:"FinancialIndexL"`
-	FinancialList   []any  `json:"FinancialList"`
-	BreakLawDetailL []any  `json:"BreakLawDetailL"`
-	BreakLawSummary []any  `json:"BreakLawSummary"`
-	SupplierCustome []any  `json:"SupplierCustome"`
-	TopCustomerList []any  `json:"TopCustomerList"`
-	TopSupplierList []any  `json:"TopSupplierList"`
-	ExpenseDetail   any    `json:"ExpenseDetail"`
-	CashFlowList    []any  `json:"CashFlowList"`
+	DataStatus string                       `json:"DataStatus"`
+	Data       TaxDataGetDataRespResultData `json:"Data"`
+}
+
+type TaxDataGetDataRespResultData struct {
+	FinancialIndexList   []json.RawMessage `json:"FinancialIndexList"`
+	DeclarationDetail    json.RawMessage   `json:"DeclarationDetail"`
+	CollectionDetail     json.RawMessage   `json:"CollectionDetail"`
+	SaleList             []json.RawMessage `json:"SaleList"`
+	TaxData              json.RawMessage   `json:"TaxData"`
+	TaxBurdenRateList    []json.RawMessage `json:"TaxBurdenRateList"`
+	FinancialList        []json.RawMessage `json:"FinancialList"`
+	SupplierCustomerList []json.RawMessage `json:"SupplierCustomerList"`
+	TopCustomerList      []json.RawMessage `json:"TopCustomerList"`
+	TopSupplierList      []json.RawMessage `json:"TopSupplierList"`
+	BreakLawDetailList   []json.RawMessage `json:"BreakLawDetailList"`
+	BreakLawSummaryList  []json.RawMessage `json:"BreakLawSummaryList"`
+	ExpenseDetail        json.RawMessage   `json:"ExpenseDetail"`
+	CashFlowList         []json.RawMessage `json:"CashFlowList"`
 }
 
 // TaxDataGetData 数据获取 https://openapi.qcc.com/dataApi/1124

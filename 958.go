@@ -67,8 +67,8 @@ type TenderCheckGetListRespResultDataItem struct {
 	OpenDate        string                                                    `json:"OpenDate"`
 	ObtainEndDate   string                                                    `json:"ObtainEndDate"`
 	BidInviUnitList []TenderCheckGetListRespResultDataItemBidInviUnitListItem `json:"BidInviUnitList"`
-	WinBidUnitList  []any                                                     `json:"WinBidUnitList"`
-	AgentUnitList   []any                                                     `json:"AgentUnitList"`
+	WinBidUnitList  []TenderCheckGetListRespResultDataItemWinBidUnitListItem  `json:"WinBidUnitList"`
+	AgentUnitList   []TenderCheckGetListRespResultDataItemAgentUnitListItem   `json:"AgentUnitList"`
 	BidProgressList []string                                                  `json:"BidProgressList"`
 	BidEndDate      string                                                    `json:"BidEndDate"`
 	ContentURL      string                                                    `json:"ContentUrl"`
@@ -76,6 +76,21 @@ type TenderCheckGetListRespResultDataItem struct {
 }
 
 type TenderCheckGetListRespResultDataItemBidInviUnitListItem struct {
+	KeyNo   string `json:"KeyNo"`
+	Name    string `json:"Name"`
+	Contact string `json:"Contact"`
+	TelNo   string `json:"TelNo"`
+}
+
+type TenderCheckGetListRespResultDataItemWinBidUnitListItem struct {
+	WinBidAmt string `json:"WinBidAmt"`
+	KeyNo     string `json:"KeyNo"`
+	Name      string `json:"Name"`
+	Contact   string `json:"Contact"`
+	TelNo     string `json:"TelNo"`
+}
+
+type TenderCheckGetListRespResultDataItemAgentUnitListItem struct {
 	KeyNo   string `json:"KeyNo"`
 	Name    string `json:"Name"`
 	Contact string `json:"Contact"`
@@ -137,11 +152,14 @@ type TenderCheckGetDetailResp struct {
 }
 
 type TenderCheckGetDetailRespResult struct {
-	ContentURL  string `json:"ContentUrl"`
-	PublishDate string `json:"PublishDate"`
-	Title       string `json:"Title"`
-	Data        any    `json:"Data"`
-	Content     string `json:"Content"`
+	ContentURL  string                             `json:"ContentUrl"`
+	PublishDate string                             `json:"PublishDate"`
+	Title       string                             `json:"Title"`
+	Data        TenderCheckGetDetailRespResultData `json:"Data"`
+}
+
+type TenderCheckGetDetailRespResultData struct {
+	Content string `json:"Content"`
 }
 
 // TenderCheckGetDetail 招投标详情 https://openapi.qcc.com/dataApi/958

@@ -57,7 +57,7 @@ type PersonHisInvestCompanyCheckGetListRespResultDataItem struct {
 	RegisteredCapitalCCY  string                                                       `json:"RegisteredCapitalCCY"`
 	Province              string                                                       `json:"Province"`
 	Status                string                                                       `json:"Status"`
-	SubIndustry           any                                                          `json:"SubIndustry"`
+	SubIndustry           string                                                       `json:"SubIndustry"`
 	PostStartDate         string                                                       `json:"PostStartDate"`
 	PostEndDate           string                                                       `json:"PostEndDate"`
 	OperInfo              PersonHisInvestCompanyCheckGetListRespResultDataItemOperInfo `json:"OperInfo"`

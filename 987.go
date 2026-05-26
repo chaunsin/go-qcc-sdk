@@ -49,15 +49,15 @@ type PersonSelfLimitExitCheckGetListRespResult struct {
 }
 
 type PersonSelfLimitExitCheckGetListRespResultDataItem struct {
-	CaseNo          string                                                              `json:"CaseNo"`
-	LimitList       []PersonSelfLimitExitCheckGetListRespResultDataItemLimitListItem    `json:"LimitList"`
-	ExecutedList    []PersonSelfLimitExitCheckGetListRespResultDataItemExecutedListItem `json:"ExecutedList"`
-	ExecutedAddress string                                                              `json:"ExecutedAddress"`
-	ApplicantList   []any                                                               `json:"ApplicantList"`
-	Amount          string                                                              `json:"Amount"`
-	Court           string                                                              `json:"Court"`
-	CourtTel        string                                                              `json:"CourtTel"`
-	PublishDate     string                                                              `json:"PublishDate"`
+	CaseNo          string                                                               `json:"CaseNo"`
+	LimitList       []PersonSelfLimitExitCheckGetListRespResultDataItemLimitListItem     `json:"LimitList"`
+	ExecutedList    []PersonSelfLimitExitCheckGetListRespResultDataItemExecutedListItem  `json:"ExecutedList"`
+	ExecutedAddress string                                                               `json:"ExecutedAddress"`
+	ApplicantList   []PersonSelfLimitExitCheckGetListRespResultDataItemApplicantListItem `json:"ApplicantList"`
+	Amount          string                                                               `json:"Amount"`
+	Court           string                                                               `json:"Court"`
+	CourtTel        string                                                               `json:"CourtTel"`
+	PublishDate     string                                                               `json:"PublishDate"`
 }
 
 type PersonSelfLimitExitCheckGetListRespResultDataItemLimitListItem struct {
@@ -66,6 +66,11 @@ type PersonSelfLimitExitCheckGetListRespResultDataItemLimitListItem struct {
 }
 
 type PersonSelfLimitExitCheckGetListRespResultDataItemExecutedListItem struct {
+	KeyNo string `json:"KeyNo"`
+	Name  string `json:"Name"`
+}
+
+type PersonSelfLimitExitCheckGetListRespResultDataItemApplicantListItem struct {
 	KeyNo string `json:"KeyNo"`
 	Name  string `json:"Name"`
 }

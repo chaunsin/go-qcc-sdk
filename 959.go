@@ -103,7 +103,20 @@ type BangDanCheckGetDetailResp struct {
 }
 
 type BangDanCheckGetDetailRespResult struct {
-	Data []any `json:"Data"`
+	VerifyResult int64                                     `json:"VerifyResult"`
+	Data         []BangDanCheckGetDetailRespResultDataItem `json:"Data"`
+}
+
+type BangDanCheckGetDetailRespResultDataItem struct {
+	Name            string                                                       `json:"Name"`
+	Ranking         string                                                       `json:"Ranking"`
+	Logo            string                                                       `json:"Logo"`
+	RelatedInfoList []BangDanCheckGetDetailRespResultDataItemRelatedInfoListItem `json:"RelatedInfoList"`
+}
+
+type BangDanCheckGetDetailRespResultDataItemRelatedInfoListItem struct {
+	KeyNo string `json:"KeyNo"`
+	Name  string `json:"Name"`
 }
 
 // BangDanCheckGetDetail 榜单详情 https://openapi.qcc.com/dataApi/959

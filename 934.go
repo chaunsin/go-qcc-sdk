@@ -118,11 +118,49 @@ type HistoryChattelMortgageCheckGetDetailResp struct {
 }
 
 type HistoryChattelMortgageCheckGetDetailRespResult struct {
-	Pledge        any   `json:"Pledge"`
-	PledgeeList   []any `json:"PledgeeList"`
-	SecuredClaim  any   `json:"SecuredClaim"`
-	GuaranteeList []any `json:"GuaranteeList"`
-	Pledgor       any   `json:"Pledgor"`
+	Pledge        HistoryChattelMortgageCheckGetDetailRespResultPledge              `json:"Pledge"`
+	PledgeeList   []HistoryChattelMortgageCheckGetDetailRespResultPledgeeListItem   `json:"PledgeeList"`
+	SecuredClaim  HistoryChattelMortgageCheckGetDetailRespResultSecuredClaim        `json:"SecuredClaim"`
+	GuaranteeList []HistoryChattelMortgageCheckGetDetailRespResultGuaranteeListItem `json:"GuaranteeList"`
+	Pledgor       HistoryChattelMortgageCheckGetDetailRespResultPledgor             `json:"Pledgor"`
+}
+
+type HistoryChattelMortgageCheckGetDetailRespResultPledge struct {
+	RegistNo     string `json:"RegistNo"`
+	RegistDate   string `json:"RegistDate"`
+	RegistOffice string `json:"RegistOffice"`
+}
+
+type HistoryChattelMortgageCheckGetDetailRespResultPledgeeListItem struct {
+	Name         string `json:"Name"`
+	IdentityType string `json:"IdentityType"`
+	IdentityNo   string `json:"IdentityNo"`
+	KeyNo        string `json:"KeyNo"`
+}
+
+type HistoryChattelMortgageCheckGetDetailRespResultSecuredClaim struct {
+	Kind              string `json:"Kind"`
+	Amount            string `json:"Amount"`
+	AssuranceScope    string `json:"AssuranceScope"`
+	FulfillObligation string `json:"FulfillObligation"`
+	Remark            string `json:"Remark"`
+}
+
+type HistoryChattelMortgageCheckGetDetailRespResultGuaranteeListItem struct {
+	Name          string                                                                             `json:"Name"`
+	Other         string                                                                             `json:"Other"`
+	Remark        string                                                                             `json:"Remark"`
+	OwnershipList []HistoryChattelMortgageCheckGetDetailRespResultGuaranteeListItemOwnershipListItem `json:"OwnershipList"`
+}
+
+type HistoryChattelMortgageCheckGetDetailRespResultGuaranteeListItemOwnershipListItem struct {
+	Name  string `json:"Name"`
+	KeyNo string `json:"KeyNo"`
+}
+
+type HistoryChattelMortgageCheckGetDetailRespResultPledgor struct {
+	Name  string `json:"Name"`
+	KeyNo string `json:"KeyNo"`
 }
 
 // HistoryChattelMortgageCheckGetDetail 动产抵押详情 https://openapi.qcc.com/dataApi/934

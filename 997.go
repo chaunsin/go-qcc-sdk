@@ -100,11 +100,33 @@ type InternationalPatentCheckGetDetailResp struct {
 }
 
 type InternationalPatentCheckGetDetailRespResult struct {
-	BasicInfo       any      `json:"BasicInfo"`
-	Requirement     string   `json:"Requirement"`
-	Instructions    string   `json:"Instructions"`
-	AbstractImage   string   `json:"AbstractImage"`
-	InstructionImgL []string `json:"InstructionImgL"`
+	BasicInfo          InternationalPatentCheckGetDetailRespResultBasicInfo `json:"BasicInfo"`
+	Requirement        string                                               `json:"Requirement"`
+	Instructions       string                                               `json:"Instructions"`
+	AbstractImage      string                                               `json:"AbstractImage"`
+	InstructionImgList []string                                             `json:"InstructionImgList"`
+}
+
+type InternationalPatentCheckGetDetailRespResultBasicInfo struct {
+	ApplicationNumber   string                                                                 `json:"ApplicationNumber"`
+	ApplicationDate     string                                                                 `json:"ApplicationDate"`
+	PublicationNumber   string                                                                 `json:"PublicationNumber"`
+	PublicationDate     string                                                                 `json:"PublicationDate"`
+	PriorityCode        string                                                                 `json:"PriorityCode"`
+	PriorityDate        string                                                                 `json:"PriorityDate"`
+	IPCList             []string                                                               `json:"IPCList"`
+	CPCList             []string                                                               `json:"CPCList"`
+	PatenteeList        []InternationalPatentCheckGetDetailRespResultBasicInfoPatenteeListItem `json:"PatenteeList"`
+	InventorList        []string                                                               `json:"InventorList"`
+	PatenteeAddressList []string                                                               `json:"PatenteeAddressList"`
+	AgencyList          []string                                                               `json:"AgencyList"`
+	Agent               string                                                                 `json:"Agent"`
+	Abstract            string                                                                 `json:"Abstract"`
+}
+
+type InternationalPatentCheckGetDetailRespResultBasicInfoPatenteeListItem struct {
+	KeyNo string `json:"KeyNo"`
+	Name  string `json:"Name"`
 }
 
 // InternationalPatentCheckGetDetail 专利详情 https://openapi.qcc.com/dataApi/997
