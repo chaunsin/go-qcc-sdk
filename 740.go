@@ -73,7 +73,7 @@ func (a *Api) ShixinCheckGetList(ctx context.Context, req *ShixinCheckGetListReq
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/ShixinCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/ShixinCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

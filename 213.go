@@ -146,7 +146,7 @@ func (a *Api) ARGetAnnualReport(ctx context.Context, req *ARGetAnnualReportReq) 
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("keyNo", req.KeyNo).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/AR/GetAnnualReport")
+		Get("/AR/GetAnnualReport")
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (a *Api) ARGetAnnualReportSummary(ctx context.Context, req *ARGetAnnualRepo
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("keyNo", req.KeyNo).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/AR/GetAnnualReportSummary")
+		Get("/AR/GetAnnualReportSummary")
 	if err != nil {
 		return nil, err
 	}

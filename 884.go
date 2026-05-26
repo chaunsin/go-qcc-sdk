@@ -76,7 +76,7 @@ func (a *Api) InvestmentCheckGetList(ctx context.Context, req *InvestmentCheckGe
 	if req.PageSize > 0 {
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/InvestmentCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/InvestmentCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

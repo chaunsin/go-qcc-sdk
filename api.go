@@ -18,9 +18,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const defaultBaseURL = "https://api.qichacha.com"
+
 type Config struct {
 	Key            string        `json:"key" yaml:"key"`
 	SecretKey      string        `json:"secretKey" yaml:"secretKey"`
+	BaseURL        string        `json:"baseURL" yaml:"baseURL"`   // default: https://api.qichacha.com
 	Location       string        `json:"location" yaml:"location"` // default: time.Local
 	Debug          bool          `json:"debug" yaml:"debug"`
 	Timeout        time.Duration `json:"timeout" yaml:"timeout"` // A Timeout of zero means no timeout
@@ -42,11 +45,13 @@ func New(cfg *Config) *Api {
 		a   = Api{
 			cfg: cfg,
 			loc: time.Local,
+			cli: cli,
 		}
 	)
 	cli.SetDebug(cfg.Debug)
 	cli.SetTimeout(cfg.Timeout)
 	cli.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	cli.SetBaseURL(resolveBaseURL(cfg))
 	if cfg.Location != "" {
 		loc, err := time.LoadLocation(cfg.Location)
 		if err != nil {
@@ -66,6 +71,7 @@ func NewClient(cfg *Config, cli *resty.Client) *Api {
 
 	a.cli.SetDebug(cfg.Debug)
 	a.cli.SetTimeout(cfg.Timeout)
+	a.cli.SetBaseURL(resolveBaseURL(cfg))
 	if cfg.Location != "" {
 		loc, err := time.LoadLocation(cfg.Location)
 		if err != nil {
@@ -86,6 +92,13 @@ func NewFromFile(filename string) *Api {
 
 func (a *Api) GetClient() *resty.Client {
 	return a.cli
+}
+
+func resolveBaseURL(cfg *Config) string {
+	if cfg != nil && cfg.BaseURL != "" {
+		return cfg.BaseURL
+	}
+	return defaultBaseURL
 }
 
 func (a *Api) auth() (string, string, error) {

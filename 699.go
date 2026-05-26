@@ -110,7 +110,7 @@ func (a *Api) IPOGetIPODetail(ctx context.Context, req *IPOGetIPODetailReq) (*IP
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("stockCode", req.StockCode).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/IPO/GetIPODetail")
+		Get("/IPO/GetIPODetail")
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +128,7 @@ type IPOGetMainIndicatorReq struct {
 }
 
 type IPOGetMainIndicatorResp struct {
-	Response[IPOGetIPODetailRespResult]
+	Response[IPOGetMainIndicatorResult]
 }
 
 type IPOGetMainIndicatorResult struct {
@@ -160,7 +160,7 @@ func (a *Api) IPOGetMainIndicator(ctx context.Context, req *IPOGetMainIndicatorR
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/IPO/GetMainIndicator")
+		Get("/IPO/GetMainIndicator")
 	if err != nil {
 		return nil, err
 	}
@@ -209,7 +209,7 @@ func (a *Api) IPOGetIPOToHolder(ctx context.Context, req *IPOGetIPOToHolderReq) 
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("stockCode", req.StockCode).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/IPO/GetIPOToHolder")
+		Get("/IPO/GetIPOToHolder")
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +227,7 @@ type IPOGetIPOExecutiveReq struct {
 }
 
 type IPOGetIPOExecutiveResp struct {
-	Response[[]IPOGetIPOToHolderResult]
+	Response[[]IPOGetIPOExecutiveResult]
 }
 
 type IPOGetIPOExecutiveResult struct {
@@ -253,7 +253,7 @@ func (a *Api) IPOGetIPOExecutive(ctx context.Context, req *IPOGetIPOExecutiveReq
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("stockCode", req.StockCode).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/IPO/GetIPOExecutive")
+		Get("/IPO/GetIPOExecutive")
 	if err != nil {
 		return nil, err
 	}

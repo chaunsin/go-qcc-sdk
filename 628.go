@@ -94,7 +94,7 @@ func (a *Api) BeneficiaryGetBeneficiary(ctx context.Context, req *BeneficiaryGet
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/Beneficiary/GetBeneficiary")
+	reply, err := c.SetResult(&resp).Get("/Beneficiary/GetBeneficiary")
 	if err != nil {
 		return nil, err
 	}

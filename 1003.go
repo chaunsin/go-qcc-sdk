@@ -86,7 +86,7 @@ func (a *Api) BeneficialOwnerGetInfo(ctx context.Context, req *BeneficialOwnerGe
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("companyName", req.CompanyName).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/BeneficialOwner/GetInfo")
+		Get("/BeneficialOwner/GetInfo")
 	if err != nil {
 		return nil, err
 	}

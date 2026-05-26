@@ -170,7 +170,7 @@ func (a *Api) ECIInfoVerifyGetInfo(ctx context.Context, req *ECIInfoVerifyGetInf
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/ECIInfoVerify/GetInfo")
+		Get("/ECIInfoVerify/GetInfo")
 	if err != nil {
 		return nil, err
 	}

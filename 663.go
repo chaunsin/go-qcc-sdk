@@ -88,7 +88,7 @@ func (a *Api) ECIInvestmentThroughGetInfo(ctx context.Context, req *ECIInvestmen
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/ECIInvestmentThrough/GetInfo")
+	reply, err := c.SetResult(&resp).Get("/ECIInvestmentThrough/GetInfo")
 	if err != nil {
 		return nil, err
 	}

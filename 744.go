@@ -70,7 +70,7 @@ func (a *Api) JudicialSaleCheckGetList(ctx context.Context, req *JudicialSaleChe
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/JudicialSaleCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/JudicialSaleCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

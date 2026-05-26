@@ -75,7 +75,7 @@ func (a *Api) PersonRiskCountCheckGetInfo(ctx context.Context, req *PersonRiskCo
 		SetQueryParam("searchKey", req.SearchKey).
 		SetQueryParam("personName", req.PersonName).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/PersonRiskCountCheck/GetInfo")
+		Get("/PersonRiskCountCheck/GetInfo")
 	if err != nil {
 		return nil, err
 	}

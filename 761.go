@@ -75,7 +75,7 @@ func (a *Api) BankruptcyCheckGetList(ctx context.Context, req *BankruptcyCheckGe
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/BankruptcyCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/BankruptcyCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

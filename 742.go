@@ -74,7 +74,7 @@ func (a *Api) SumptuaryCheckGetList(ctx context.Context, req *SumptuaryCheckGetL
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/SumptuaryCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/SumptuaryCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

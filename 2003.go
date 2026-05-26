@@ -299,7 +299,7 @@ func (a *Api) CustomerDueDiligenceKYC(ctx context.Context, req *CustomerDueDilig
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/CustomerDueDiligence/KYC")
+		Get("/CustomerDueDiligence/KYC")
 	if err != nil {
 		return nil, err
 	}

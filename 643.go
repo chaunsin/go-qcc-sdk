@@ -99,7 +99,7 @@ func (a *Api) ActualControlSuspectedActualControl(ctx context.Context, req *Actu
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("keyWord", req.Keyword).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/ActualControl/SuspectedActualControl")
+		Get("/ActualControl/SuspectedActualControl")
 	if err != nil {
 		return nil, err
 	}

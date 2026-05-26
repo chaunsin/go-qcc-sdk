@@ -86,7 +86,7 @@ func (a *Api) CourtNoticeCheckGetList(ctx context.Context, req *CourtNoticeCheck
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/CourtNoticeCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/CourtNoticeCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

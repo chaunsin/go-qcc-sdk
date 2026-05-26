@@ -89,7 +89,7 @@ func (a *Api) CaseFilingCheckGetList(ctx context.Context, req *CaseFilingCheckGe
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/CaseFilingCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/CaseFilingCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

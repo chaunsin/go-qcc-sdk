@@ -97,7 +97,7 @@ func (a *Api) JudgmentDocCheckGetList(ctx context.Context, req *JudgmentDocCheck
 		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 
-	reply, err := c.SetResult(&resp).Get("https://api.qichacha.com/JudgmentDocCheck/GetList")
+	reply, err := c.SetResult(&resp).Get("/JudgmentDocCheck/GetList")
 	if err != nil {
 		return nil, err
 	}

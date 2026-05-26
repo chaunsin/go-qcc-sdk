@@ -59,7 +59,7 @@ func (a *Api) ECIThreeElVerifyGetInfo(ctx context.Context, req *ECIThreeElVerify
 		SetQueryParam("companyName", req.CompanyName).
 		SetQueryParam("operName", req.OperName).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/AR/GetAnnualReport")
+		Get("/ECIThreeElVerify/GetInfo")
 	if err != nil {
 		return nil, err
 	}

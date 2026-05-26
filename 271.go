@@ -62,7 +62,7 @@ func (a *Api) ECICreditCodeGetCreditCodeNew(ctx context.Context, req *ECICreditC
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("keyWord", req.Keyword).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/ECICreditCode/GetCreditCodeNew")
+		Get("/ECICreditCode/GetCreditCodeNew")
 	if err != nil {
 		return nil, err
 	}

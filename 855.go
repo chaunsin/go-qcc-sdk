@@ -59,7 +59,7 @@ func (a *Api) ECITwoElVerifyGetInfo(ctx context.Context, req *ECITwoElVerifyGetI
 		SetQueryParam("verifyName", req.VerifyName).
 		SetQueryParam("verifyType", fmt.Sprintf("%d", req.VerifyType)).
 		SetResult(&resp).
-		Get("https://api.qichacha.com/ECITwoElVerify/GetInfo")
+		Get("/ECITwoElVerify/GetInfo")
 	if err != nil {
 		return nil, err
 	}
