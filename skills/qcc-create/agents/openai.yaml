@@ -1,4 +1,4 @@
 interface:
   display_name: "QCC Create"
   short_description: "Create, audit, or update QCC Go SDK APIs"
-  default_prompt: "Use $qcc-create to implement or audit a QCC API from an ApiCode or official URL."
+  default_prompt: "Use $qcc-create to implement or audit one or more QCC APIs from ApiCodes or official URLs."

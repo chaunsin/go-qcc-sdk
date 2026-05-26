@@ -9,6 +9,20 @@ Use this reference after identifying the target ApiCode and official QCC documen
 - `api.go` owns config, resty client setup, base URL resolution, and `auth()` token generation.
 - Tests use `httptest` and `NewClient` with a test base URL.
 
+## ApiCode and Interface Count
+
+- Treat each QCC ApiCode page as a documentation container, not necessarily a single endpoint.
+- First inventory all interfaces on the page, including Chinese name, request path, HTTP method, parameters, response structure, and example.
+- Most ApiCodes have one interface, but some have multiple interfaces. For example `dataApi/213` includes `查询公司年报` and `查询公司年报概况`, which should both be represented in `213.go` unless the user scoped the task to one interface.
+- When auditing existing code, compare the documented interface count with the implemented method count and report missing, extra, renamed, or stale methods.
+
+## Batched and Parallel Work
+
+- Multiple ApiCodes or docs URLs are good parallel candidates only when each task owns a different `{apicode}.go` file.
+- Multiple methods under the same ApiCode should usually be serial or owned by one agent because they share one file and public naming decisions.
+- In parallel mode, give every subagent a single ApiCode or explicit file boundary plus the same repository style rules; tell it not to modify unrelated files.
+- The coordinator should compare each subagent result against official docs, run formatting/tests once, and produce one combined summary by ApiCode.
+
 ## File and Method Style
 
 - Keep the MIT license header and `package api` used by existing interface files.

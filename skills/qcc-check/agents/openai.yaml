@@ -1,0 +1,4 @@
+interface:
+  display_name: "QCC Check"
+  short_description: "Audit QCC Go SDK doc coverage"
+  default_prompt: "Use $qcc-check to run a parallel coverage audit of this Go SDK against the official QCC OpenAPI docs."
