@@ -29,11 +29,13 @@ import (
 )
 
 type BeneficiaryGetBeneficiaryReq struct {
-	SearchKey   string
+	// 企业名称、统一社会信用代码
 	CompanyName string
-	Mode        int64 // 穿透方式，0：穿透受益自然人(默认值)，1：穿透受益企业法人，2：穿透受益自然人和企业法人
-	PageSize    int64
-	PageIndex   int64
+	// 需要穿透识别的股东股权最小百分值（0到100之间，如输入25，即表示25%）
+	Percent   string
+	Mode      int64 // 穿透方式，0：穿透受益自然人(默认值)，1：穿透受益企业法人，2：穿透受益自然人和企业法人
+	PageSize  int64
+	PageIndex int64
 }
 
 type BeneficiaryGetBeneficiaryResp struct {
@@ -82,8 +84,8 @@ func (a *Api) BeneficiaryGetBeneficiary(ctx context.Context, req *BeneficiaryGet
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
 		SetQueryParam("key", a.cfg.Key).
-		SetQueryParam("searchKey", req.SearchKey).
-		SetQueryParam("companyName", req.CompanyName)
+		SetQueryParam("companyName", req.CompanyName).
+		SetQueryParam("percent", req.Percent)
 	if req.Mode > 0 {
 		c.SetQueryParam("mode", fmt.Sprintf("%d", req.Mode))
 	}

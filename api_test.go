@@ -49,7 +49,7 @@ func TestFuzzySearchGetListUsesExpectedRequestAndParsesResponse(t *testing.T) {
 		assert.Equal(t, "test-key", r.URL.Query().Get("key"))
 		assert.Equal(t, "企查查科技股份有限公司", r.URL.Query().Get("searchKey"))
 		assert.Equal(t, "1", r.URL.Query().Get("pageIndex"))
-		assert.Equal(t, "10", r.URL.Query().Get("pageSize"))
+		assert.Empty(t, r.URL.Query().Get("pageSize"))
 
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"Status":"200","Message":"OK","Result":{"KeyNo":"k1","Name":"企查查科技股份有限公司"}}`))
@@ -59,7 +59,6 @@ func TestFuzzySearchGetListUsesExpectedRequestAndParsesResponse(t *testing.T) {
 	resp, err := api.FuzzySearchGetList(ctx, &FuzzySearchGetListReq{
 		SearchKey: "企查查科技股份有限公司",
 		PageIndex: 1,
-		PageSize:  10,
 	})
 
 	assert.NoError(t, err)

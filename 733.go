@@ -30,6 +30,10 @@ import (
 
 type ECIBranchGetListReq struct {
 	SearchKey string
+	// 所属地区（行政区划编码）
+	AreaCode string
+	// 登记状态（0-存续/在业/正常，1-迁入，2-迁出，3-注销，4-吊销，5-撤销，6-清算，7-停业，8-歇业，9-除名，10-责令关闭，11-其他）
+	Status    string
 	PageIndex int64
 	PageSize  int64
 }
@@ -62,6 +66,12 @@ func (a *Api) ECIBranchGetList(ctx context.Context, req *ECIBranchGetListReq) (*
 		SetHeader("Timespan", unix).
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey)
+	if req.AreaCode != "" {
+		c.SetQueryParam("areaCode", req.AreaCode)
+	}
+	if req.Status != "" {
+		c.SetQueryParam("status", req.Status)
+	}
 	if req.PageIndex > 0 {
 		c.SetQueryParam("pageIndex", fmt.Sprintf("%d", req.PageIndex))
 	}

@@ -44,7 +44,6 @@ func Example() {
 	})
 	resp, err := cli.FuzzySearchGetList(context.Background(), &api.FuzzySearchGetListReq{
 		SearchKey: "企查查科技股份有限公司",
-		PageSize:  10,
 		PageIndex: 1,
 	})
 	if err != nil {

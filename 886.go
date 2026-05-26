@@ -29,11 +29,8 @@ import (
 )
 
 type FuzzySearchGetListReq struct {
-	SearchKey    string
-	ProvinceCode string
-	CityCode     string
-	PageSize     int64
-	PageIndex    int64
+	SearchKey string
+	PageIndex int64
 }
 
 type FuzzySearchGetListResp struct {
@@ -51,7 +48,7 @@ type FuzzySearchGetListRespData struct {
 	Address    string `json:"Address"`
 }
 
-// FuzzySearchGetList 企业高级搜索 https://openapi.qcc.com/dataApi/886
+// FuzzySearchGetList 企业模糊搜索 https://openapi.qcc.com/dataApi/886
 func (a *Api) FuzzySearchGetList(ctx context.Context, req *FuzzySearchGetListReq) (*FuzzySearchGetListResp, error) {
 	var resp FuzzySearchGetListResp
 	token, unix, err := a.auth()
@@ -64,17 +61,8 @@ func (a *Api) FuzzySearchGetList(ctx context.Context, req *FuzzySearchGetListReq
 		SetHeader("Timespan", unix).
 		SetQueryParam("key", a.cfg.Key).
 		SetQueryParam("searchKey", req.SearchKey)
-	if req.ProvinceCode != "" {
-		c.SetQueryParam("provinceCode", req.ProvinceCode)
-	}
-	if req.CityCode != "" {
-		c.SetQueryParam("cityCode", req.CityCode)
-	}
 	if req.PageIndex > 0 {
 		c.SetQueryParam("pageIndex", fmt.Sprintf("%d", req.PageIndex))
-	}
-	if req.PageSize > 0 {
-		c.SetQueryParam("pageSize", fmt.Sprintf("%d", req.PageSize))
 	}
 	reply, err := c.SetResult(&resp).Get("/FuzzySearch/GetList")
 	if err != nil {

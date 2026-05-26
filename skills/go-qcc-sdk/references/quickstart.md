@@ -82,7 +82,6 @@ defer cancel()
 resp, err := client.FuzzySearchGetList(ctx, &api.FuzzySearchGetListReq{
 	SearchKey: "企查查科技股份有限公司",
 	PageIndex: 1,
-	PageSize:  10,
 })
 if err != nil {
 	return err

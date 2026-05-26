@@ -31,6 +31,8 @@ import (
 
 type ARGetAnnualReportReq struct {
 	KeyNo string
+	// 年份（如：“2025”）
+	Year string
 }
 
 type ARGetAnnualReportResp struct {
@@ -139,14 +141,17 @@ func (a *Api) ARGetAnnualReport(ctx context.Context, req *ARGetAnnualReportReq) 
 		return nil, fmt.Errorf("auth: %w", err)
 	}
 
-	reply, err := a.cli.R().
+	c := a.cli.R().
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
 		SetQueryParam("key", a.cfg.Key).
-		SetQueryParam("keyNo", req.KeyNo).
-		SetResult(&resp).
-		Get("/AR/GetAnnualReport")
+		SetQueryParam("keyNo", req.KeyNo)
+	if req.Year != "" {
+		c.SetQueryParam("year", req.Year)
+	}
+
+	reply, err := c.SetResult(&resp).Get("/AR/GetAnnualReport")
 	if err != nil {
 		return nil, err
 	}
@@ -161,6 +166,8 @@ func (a *Api) ARGetAnnualReport(ctx context.Context, req *ARGetAnnualReportReq) 
 
 type ARGetAnnualReportSummaryReq struct {
 	KeyNo string
+	// 年份（如：“2025”）
+	Year string
 }
 
 type ARGetAnnualReportSummaryResp struct {
@@ -183,14 +190,17 @@ func (a *Api) ARGetAnnualReportSummary(ctx context.Context, req *ARGetAnnualRepo
 		return nil, fmt.Errorf("auth: %w", err)
 	}
 
-	reply, err := a.cli.R().
+	c := a.cli.R().
 		SetContext(ctx).
 		SetHeader("Token", token).
 		SetHeader("Timespan", unix).
 		SetQueryParam("key", a.cfg.Key).
-		SetQueryParam("keyNo", req.KeyNo).
-		SetResult(&resp).
-		Get("/AR/GetAnnualReportSummary")
+		SetQueryParam("keyNo", req.KeyNo)
+	if req.Year != "" {
+		c.SetQueryParam("year", req.Year)
+	}
+
+	reply, err := c.SetResult(&resp).Get("/AR/GetAnnualReportSummary")
 	if err != nil {
 		return nil, err
 	}

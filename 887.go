@@ -31,9 +31,9 @@ import (
 type JudgmentDocCheckGetListReq struct {
 	SearchKey    string
 	PubYear      string
-	CaseIdentity int64 // 案件身份（1-被告:包含被告、被执行人、被上诉人、被申请人；2-原告:包含原告、申请执人、上诉人、申请人)
-	CaseStatus   int64 // 案件状态（1：待结案，2：已结案）
-	Keyword      string
+	CaseIdentity int64  // 案件身份（1-被告:包含被告、被执行人、被上诉人、被申请人；2-原告:包含原告、申请执人、上诉人、申请人)
+	CaseStatus   int64  // 案件状态（1：待结案，2：已结案）
+	Keyword      string // 筛选关键词（支持案号、案由、当事人、判决结果）
 	PageSize     int64
 	PageIndex    int64
 }
@@ -88,7 +88,7 @@ func (a *Api) JudgmentDocCheckGetList(ctx context.Context, req *JudgmentDocCheck
 		c.SetQueryParam("caseStatus", fmt.Sprintf("%d", req.CaseStatus))
 	}
 	if req.Keyword != "" {
-		c.SetQueryParam("keyword", req.Keyword)
+		c.SetQueryParam("keyWord", req.Keyword)
 	}
 	if req.PageIndex > 0 {
 		c.SetQueryParam("pageIndex", fmt.Sprintf("%d", req.PageIndex))

@@ -20,6 +20,72 @@ func TestGeneratedQCCInterfacesUseExpectedRequests(t *testing.T) {
 		call   func(*Api) error
 	}{
 		{
+			name:   "213/ARGetAnnualReport",
+			path:   "/AR/GetAnnualReport",
+			method: "GET",
+			query:  map[string]string{"keyNo": "test-keyNo", "year": "test-year"},
+			result: `[]`,
+			call: func(api *Api) error {
+				_, err := api.ARGetAnnualReport(ctx, &ARGetAnnualReportReq{KeyNo: "test-keyNo", Year: "test-year"})
+				return err
+			},
+		},
+		{
+			name:   "213/ARGetAnnualReportSummary",
+			path:   "/AR/GetAnnualReportSummary",
+			method: "GET",
+			query:  map[string]string{"keyNo": "test-keyNo", "year": "test-year"},
+			result: `[]`,
+			call: func(api *Api) error {
+				_, err := api.ARGetAnnualReportSummary(ctx, &ARGetAnnualReportSummaryReq{KeyNo: "test-keyNo", Year: "test-year"})
+				return err
+			},
+		},
+		{
+			name:   "628/BeneficiaryGetBeneficiary",
+			path:   "/Beneficiary/GetBeneficiary",
+			method: "GET",
+			query:  map[string]string{"companyName": "test-companyName", "percent": "25", "mode": "7", "pageIndex": "7", "pageSize": "7"},
+			result: `{}`,
+			call: func(api *Api) error {
+				_, err := api.BeneficiaryGetBeneficiary(ctx, &BeneficiaryGetBeneficiaryReq{CompanyName: "test-companyName", Percent: "25", Mode: 7, PageIndex: 7, PageSize: 7})
+				return err
+			},
+		},
+		{
+			name:   "733/ECIBranchGetList",
+			path:   "/ECIBranch/GetList",
+			method: "GET",
+			query:  map[string]string{"searchKey": "test-searchKey", "areaCode": "test-areaCode", "status": "test-status", "pageIndex": "7", "pageSize": "7"},
+			result: `[]`,
+			call: func(api *Api) error {
+				_, err := api.ECIBranchGetList(ctx, &ECIBranchGetListReq{SearchKey: "test-searchKey", AreaCode: "test-areaCode", Status: "test-status", PageIndex: 7, PageSize: 7})
+				return err
+			},
+		},
+		{
+			name:   "886/FuzzySearchGetList",
+			path:   "/FuzzySearch/GetList",
+			method: "GET",
+			query:  map[string]string{"searchKey": "test-searchKey", "pageIndex": "7"},
+			result: `{}`,
+			call: func(api *Api) error {
+				_, err := api.FuzzySearchGetList(ctx, &FuzzySearchGetListReq{SearchKey: "test-searchKey", PageIndex: 7})
+				return err
+			},
+		},
+		{
+			name:   "887/JudgmentDocCheckGetList",
+			path:   "/JudgmentDocCheck/GetList",
+			method: "GET",
+			query:  map[string]string{"searchKey": "test-searchKey", "pubYear": "test-pubYear", "caseIdentity": "7", "caseStatus": "7", "keyWord": "test-keyWord", "pageIndex": "7", "pageSize": "7"},
+			result: `{}`,
+			call: func(api *Api) error {
+				_, err := api.JudgmentDocCheckGetList(ctx, &JudgmentDocCheckGetListReq{SearchKey: "test-searchKey", PubYear: "test-pubYear", CaseIdentity: 7, CaseStatus: 7, Keyword: "test-keyWord", PageIndex: 7, PageSize: 7})
+				return err
+			},
+		},
+		{
 			name:   "231/TmSearchByApplicant",
 			path:   "/tm/SearchByApplicant",
 			method: "GET",
