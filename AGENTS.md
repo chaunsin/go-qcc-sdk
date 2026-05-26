@@ -24,11 +24,13 @@
 - Endpoint methods should use `func (a *Api) Method(ctx context.Context, req *MethodReq) (*MethodResp, error)`.
 - Use `a.auth()` and wrap auth failures as `fmt.Errorf("auth: %w", err)`.
 - Build resty requests with `SetContext(ctx)`, `Token` and `Timespan` headers, shared `key` query parameter, documented endpoint parameters, and `SetResult(&resp)`.
+- Prefer fluent resty chaining for request setup: include all unconditional endpoint query parameters in the initial `a.cli.R()` chain instead of assigning the request and then calling unconditional `c.SetQueryParam(...)` on later lines. Use separate calls only when a parameter is conditional, such as omitting an optional empty value.
 - Preserve current error handling: return transport errors directly, report non-200 HTTP status with response body, and return an error when `resp.Status != "200"`.
 - Request parameter wire names and response JSON tags must exactly match official docs, including casing and spelling.
 - Send every documented request parameter unless official docs mark it inapplicable or the user explicitly scopes it out.
 - Omit optional strings when empty. For optional numeric fields, use pointer or explicit unset marker unless zero is confirmed not to be a meaningful documented value.
 - Prefer `int64` for integer-like response fields in this repository's existing style; prefer `string` for dates, IDs, codes, names, percentages, money-like values, and ambiguous examples unless docs prove a numeric JSON type.
+- Do not use `json.RawMessage` as an SDK interface response/result field. Model documented response payloads with concrete structs, slices, and typed fields instead.
 - Method comments should be GoDoc-style and include the official docs URL, for example `https://openapi.qcc.com/dataApi/{ApiCode}`.
 
 ## Tests And Validation
