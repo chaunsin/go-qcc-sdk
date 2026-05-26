@@ -34,6 +34,9 @@ Use this reference after identifying the target ApiCode and official QCC documen
 ## Request Pattern
 
 - Use `func (a *Api) Method(ctx context.Context, req *MethodReq) (*MethodResp, error)`.
+- Before writing or updating a method, create a request-parameter inventory from official docs: exact wire name, location, required flag, type, default, enum/range, and description.
+- Every documented request parameter must appear in the request struct and must be sent in the resty request builder with the exact official wire name and case.
+- Treat omitted request parameters as a bug unless the official docs mark them irrelevant to the selected interface or the user explicitly scoped them out.
 - Start each call with:
   - `var resp MethodResp`
   - `token, unix, err := a.auth()`
@@ -47,7 +50,18 @@ Use this reference after identifying the target ApiCode and official QCC documen
   - `SetResult(&resp)`
   - `Get("/Module/Action")` unless official docs explicitly require another HTTP method.
 - Required parameters are set directly; optional string parameters are set only when non-empty; optional numeric parameters are set only when greater than zero unless docs define zero as meaningful.
+- If a documented numeric parameter allows zero or needs an unset/zero distinction, use a pointer field such as `*int64` or another explicit representation, then set the query parameter when the pointer is non-nil.
+- Do not collapse multiple official parameters into one SDK field unless the docs define them as mutually exclusive aliases and the method comment explains the mapping.
+- Do not add undocumented request parameters beyond shared SDK auth/base parameters (`key`, `Token`, `Timespan`) without calling them out in the summary.
 - Convert integers with `fmt.Sprintf("%d", value)` when passing query parameters.
+
+## Request Parameter Audit Checklist
+
+- Count official request parameters per interface and compare that count with request struct fields, excluding SDK auth/base parameters.
+- Check every official wire name appears exactly once in `SetQueryParam`, `SetHeader`, path replacement, or body construction.
+- Check required parameters are always sent and optional parameters have documented omission rules.
+- Check field comments preserve official descriptions, enum values, ranges, and defaults when available.
+- Add or update `httptest` assertions for all documented parameters, not only a representative subset.
 
 ## Type and Field Mapping
 

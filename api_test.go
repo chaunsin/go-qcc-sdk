@@ -140,3 +140,29 @@ func TestIPOGetIPOExecutiveParsesExecutiveResult(t *testing.T) {
 	assert.Len(t, resp.Result, 1)
 	assert.Equal(t, "总经理", resp.Result[0].Position)
 }
+
+func TestCompanyShopInfoGetInfoUsesExpectedPathAndParsesResponse(t *testing.T) {
+	api, closeServer := newTestAPI(t, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "/CompanyShopInfo/GetInfo", r.URL.Path)
+		assert.NotEmpty(t, r.Header.Get("Token"))
+		assert.NotEmpty(t, r.Header.Get("Timespan"))
+		assert.Equal(t, "test-key", r.URL.Query().Get("key"))
+		assert.Equal(t, "企查查科技股份有限公司", r.URL.Query().Get("searchKey"))
+		assert.Equal(t, "2026-05", r.URL.Query().Get("dataMonth"))
+
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"Status":"200","Message":"OK","Result":{"VerifyResult":1,"Data":{"CompanyShopNum":"1","ShopList":[{"DataMonth":"2026-05","PlatformId":"1","Platform":"淘宝","ShopId":"s1","ShopName":"企查查旗舰店","CreditCode":"91320594758983201R","CompanyName":"企查查科技股份有限公司"}]}}}`))
+	})
+	defer closeServer()
+
+	resp, err := api.CompanyShopInfoGetInfo(ctx, &CompanyShopInfoGetInfoReq{
+		SearchKey: "企查查科技股份有限公司",
+		DataMonth: "2026-05",
+	})
+
+	assert.NoError(t, err)
+	assert.Equal(t, int64(1), resp.Result.VerifyResult)
+	assert.Equal(t, "1", resp.Result.Data.CompanyShopNum)
+	assert.Equal(t, "淘宝", resp.Result.Data.ShopList[0].Platform)
+	assert.Equal(t, "企查查旗舰店", resp.Result.Data.ShopList[0].ShopName)
+}
