@@ -56,7 +56,7 @@ func Example() {
 
 ## AI Agent 技能
 
-本仓库在 `skills` 目录内置了面向 AI agent 的技能，分为应用接入和 SDK 维护两类。普通业务项目接入本 SDK 时优先使用 `go-qcc-sdk`；只有维护本仓库接口实现时才使用 `qcc-check` 或 `qcc-create`。
+本仓库在 `skills` 目录内置了面向 AI agent 的技能，适用于 Codex 和 Claude, 技能分为应用接入和 SDK 维护两类。普通业务项目接入本 SDK 时优先使用 `go-qcc-sdk`；只有维护本仓库接口实现时才使用 `qcc-check` 或 `qcc-create`。
 
 ### 技能说明
 
