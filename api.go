@@ -125,6 +125,9 @@ func LoadConfig(filename string) (*Config, error) {
 	default:
 		return nil, errors.New("unsupported file extension types")
 	}
+	if err != nil {
+		return nil, err
+	}
 	return &cfg, nil
 }
 
