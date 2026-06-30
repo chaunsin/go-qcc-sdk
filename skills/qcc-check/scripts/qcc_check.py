@@ -364,11 +364,46 @@ def normalize_interfaces(record: dict[str, Any]) -> tuple[int, list[str]]:
     return count, interfaces
 
 
-def load_docs(path: Path) -> list[DocApi]:
+def docs_warnings(data: Any, records: list[Any]) -> list[str]:
+    warnings: list[str] = []
+    if isinstance(data, dict):
+        raw_warnings = data.get("warnings")
+        if raw_warnings:
+            warnings.append(f"top-level warnings: {len(raw_warnings) if isinstance(raw_warnings, list) else raw_warnings}")
+        summary = data.get("summary")
+        if isinstance(summary, dict):
+            try:
+                warning_count = int(summary.get("warning_count") or 0)
+            except (TypeError, ValueError):
+                warning_count = 0
+            if warning_count:
+                warnings.append(f"summary.warning_count={warning_count}")
+
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        apicode = str(first_value(record, ("apicode", "ApiCode", "apiCode", "code", "api_code"), "<unknown>"))
+        if record.get("error"):
+            warnings.append(f"ApiCode {apicode} error: {record['error']}")
+        if record.get("warnings"):
+            warnings.append(f"ApiCode {apicode} warnings: {record['warnings']}")
+    return warnings
+
+
+def load_docs(path: Path, allow_warnings: bool = False) -> list[DocApi]:
     data = json.loads(path.read_text(encoding="utf-8"))
     records = data.get("docs", data.get("data", data.get("items"))) if isinstance(data, dict) else data
     if not isinstance(records, list):
         raise ValueError("docs JSON must be a list or an object containing a docs/data/items list")
+    warnings = docs_warnings(data, records)
+    if warnings and not allow_warnings:
+        preview = "; ".join(warnings[:5])
+        suffix = "" if len(warnings) <= 5 else f"; ... +{len(warnings) - 5} more"
+        raise ValueError(
+            "docs JSON contains extraction warnings/errors; "
+            "fix official extraction or rerun with --allow-doc-warnings for manual inspection: "
+            f"{preview}{suffix}"
+        )
 
     docs: list[DocApi] = []
     seen: set[str] = set()
@@ -603,31 +638,38 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--repo", default=".", help="Path to go-qcc-sdk repository root")
     parser.add_argument("--local-json", action="store_true", help="Print local scan JSON and exit")
     parser.add_argument("--docs-json", help="Official docs extraction JSON to compare against")
+    parser.add_argument("--allow-doc-warnings", action="store_true", help="Compare docs JSON even when extraction warnings/errors are present")
     parser.add_argument("--output", help="Optional path for the Markdown report")
     return parser.parse_args(argv)
 
 
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
-    repo = Path(args.repo).resolve()
-    local = scan_local(repo)
+    try:
+        repo = Path(args.repo).resolve()
+        local = scan_local(repo)
 
-    if args.local_json:
-        print(json.dumps(local_json(local), ensure_ascii=False, indent=2))
+        if args.local_json:
+            print(json.dumps(local_json(local), ensure_ascii=False, indent=2))
+            return 0
+
+        if not args.docs_json:
+            print("--docs-json is required unless --local-json is used", file=sys.stderr)
+            return 2
+
+        docs = load_docs(Path(args.docs_json), allow_warnings=args.allow_doc_warnings)
+        result = compare(docs, local)
+        report = markdown_report(result)
+        if args.output:
+            output = Path(args.output)
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(report, encoding="utf-8")
+        else:
+            print(report, end="")
         return 0
-
-    if not args.docs_json:
-        print("--docs-json is required unless --local-json is used", file=sys.stderr)
-        return 2
-
-    docs = load_docs(Path(args.docs_json))
-    result = compare(docs, local)
-    report = markdown_report(result)
-    if args.output:
-        Path(args.output).write_text(report, encoding="utf-8")
-    else:
-        print(report, end="")
-    return 0
+    except (FileNotFoundError, json.JSONDecodeError, OSError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

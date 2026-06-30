@@ -1,0 +1,82 @@
+{
+  "skill_name": "qcc-check",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "[$qcc-check] 检查这个 go-qcc-sdk 仓库和企查查官方 OpenAPI 文档的 ApiCode 覆盖率。当前环境网络需要审批，别调用真实付费接口。",
+      "expected_output": "The agent uses qcc_fetch_docs.py with --summary-json as the official-doc source, continues only when status is ok and warning_count is 0, then runs qcc_check.py with the extracted JSON, reports official/local counts, and avoids real paid QCC API calls.",
+      "files": [],
+      "expectations": [
+        "The output uses https://openapi.qcc.com/dataApi as the official index source and does not call api.qichacha.com paid endpoints.",
+        "The output prefers python3 skills/qcc-check/scripts/qcc_fetch_docs.py --summary-json instead of ad-hoc curl pipelines for official docs extraction.",
+        "The output checks the extractor summary status/warning_count before running the comparator.",
+        "The output runs or instructs running qcc_check.py with --docs-json after extraction.",
+        "The final report includes official ApiCode count, official interface count, local ApiCode file count, local method count, and extraction warning count.",
+        "The output states that the audit checks only ApiCode/interface-count coverage, not params, response fields, JSON tags, or runtime correctness."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "qcc-check 跑官方文档抓取时有两个 dataApi 详情页解析不到接口 tab，但本地方法数量看起来对得上。你直接给我覆盖率结论吧。",
+      "expected_output": "The agent refuses to declare final coverage while extraction warnings exist, does not pass warning docs JSON to qcc_check.py unless explicitly doing manual inspection, lists the affected ApiCodes or warning type, and asks for accessible official docs content or an approved browser workflow.",
+      "files": [],
+      "expectations": [
+        "The output treats extractor warnings, zero-interface detail records, rendered 404 pages, login prompts, or dynamic-rendering failures as blockers.",
+        "The output does not consume an out path from a failed extractor run or ignore the extractor exit status.",
+        "The output does not guess interface counts from local method counts.",
+        "The output relies on qcc_check.py default rejection of warning/error docs JSON for final coverage claims.",
+        "The output asks for source material or an approved browser/Chrome workflow when official docs cannot be verified.",
+        "The output does not report 100% coverage unless official extraction completed without blocking warnings."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "帮我确认 213.go 和 1124.go 这种一个 ApiCode 多接口的文件有没有少方法。只要 qcc-check 视角，不要查参数字段。",
+      "expected_output": "The agent treats each ApiCode page as a container that can document multiple interfaces, compares official interface count with local *Api method count, and explicitly avoids parameter/field correctness review.",
+      "files": [],
+      "expectations": [
+        "The output does not assume one ApiCode equals one endpoint.",
+        "The output compares documented interface counts against local *Api receiver method counts.",
+        "The output can cite multi-interface examples such as 213 and 1124 when supported by official extraction.",
+        "The output does not inspect request params, response fields, JSON tags, or implementation correctness."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "我想用 qcc-check 顺便审一下 response struct 的 JSON tags、请求参数有没有漏、测试覆盖够不够。",
+      "expected_output": "The agent states that qcc-check is limited to ApiCode/interface-count coverage and does not perform params, response fields, JSON tag, tests, or implementation correctness audits; it recommends switching to qcc-create or a separate implementation audit if needed.",
+      "files": [],
+      "expectations": [
+        "The output keeps qcc-check scoped to ApiCode/interface-count coverage.",
+        "The output does not perform or promise request parameter, response struct, JSON tag, test coverage, or runtime correctness review under qcc-check.",
+        "The output recommends qcc-create or a separate implementation audit for source-level interface repair."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "跑 qcc-check，但不要开子 agent；当前 shell 审批对管道命令很敏感。",
+      "expected_output": "The agent runs the bundled single-command extractor with --summary-json using its thread pool or a sequential workers=1 fallback, does not spawn subagents, and avoids shell pipelines that obscure network approval.",
+      "files": [],
+      "expectations": [
+        "The output does not spawn subagents when the user says not to or when tool policy requires explicit subagent authorization.",
+        "The output uses qcc_fetch_docs.py with --summary-json and either thread-pool extraction or a sequential --workers 1 fallback.",
+        "The output avoids curl-pipe-python style commands in approval-restricted environments.",
+        "The output keeps one coordinator responsible for final comparison and reporting."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "我要把 qcc-check skill 发给不同系统的人用，包括 macOS、Linux、Windows 和各种 AGENTS 工具。请检查时不要写死 /private/tmp 或 /tmp，报告也不一定要落盘。",
+      "expected_output": "The agent uses the extractor --summary-json machine output and default unique file in Python platform temp directory, or a user/tool supplied artifact path, passes the summary out path to qcc_check.py, lets Markdown print to stdout unless a file is needed, and avoids hardcoded OS-specific temp paths.",
+      "files": [],
+      "expectations": [
+        "The output does not hardcode /private/tmp, /tmp, or OS-specific temp paths in reusable commands.",
+        "The output uses qcc_fetch_docs.py --summary-json with its default unique platform-temp JSON path or an explicit user/tool supplied --out path.",
+        "The output passes the official docs JSON path from the summary out field to qcc_check.py.",
+        "The output lets qcc_check.py print Markdown to stdout unless a report artifact path is explicitly needed.",
+        "The output mentions that any file artifact path should be chosen for the current computer or agent runtime.",
+        "The output does not rely on parsing a human-readable out=... log line when machine-readable summary JSON is available."
+      ]
+    }
+  ]
+}

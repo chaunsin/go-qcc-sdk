@@ -15,7 +15,39 @@ Use `https://openapi.qcc.com/dataApi` as the official index. Extract one record 
 }
 ```
 
-Then open each detail page and extract every documented interface under that ApiCode. A detail record should look like:
+The public index is currently rendered by Nuxt SSR and embeds API records in the HTML payload with keys such as `ApiCode`, `Title`, and `Description`. Do not assume lowercase `apiCode`, and do not treat category-count endpoints as sufficient because they do not provide per-ApiCode interface counts.
+
+The extractor may parse endpoint address strings such as `https://api.qichacha.com/...` from documentation HTML, but an audit must not request that host or any real paid QCC API endpoint.
+
+Prefer the bundled extractor for a full audit:
+
+```bash
+python3 skills/qcc-check/scripts/qcc_fetch_docs.py --summary-json --verbose
+```
+
+The extractor writes to a unique JSON file in Python's platform temp directory by default. With `--summary-json`, stdout is a one-line machine-readable JSON object:
+
+```json
+{"status":"ok","apicode_count":167,"interface_count":194,"warning_count":0,"out":"/path/to/qcc_official_docs.json"}
+```
+
+Continue only when `status` is `ok`, `warning_count` is `0`, and `out` is non-empty. If the current runtime needs a stable artifact location, pass `--out <path>` with a path valid for that computer or agent tool. To inspect Python's platform temp directory without fetching network docs, run:
+
+```bash
+python3 skills/qcc-check/scripts/qcc_fetch_docs.py --print-temp-dir
+```
+
+Then run the comparator:
+
+```bash
+python3 skills/qcc-check/scripts/qcc_check.py --repo . --docs-json <official-docs-json>
+```
+
+The comparator prints Markdown to stdout by default. Only pass `--output <report-path>` when the user or tool needs a file artifact, and choose a runtime-valid path instead of hardcoding macOS-only locations such as `/private/tmp`.
+
+`qcc_check.py` rejects official docs JSON with top-level `warnings`, record-level `error`/`warnings`, or non-zero `summary.warning_count` by default. Use `--allow-doc-warnings` only for explicit manual inspection; do not use it for a final coverage claim.
+
+The extractor opens each detail page and extracts every documented interface under that ApiCode. A detail record should look like:
 
 ```json
 {
@@ -36,6 +68,19 @@ Then open each detail page and extract every documented interface under that Api
 ```
 
 If the extraction tool cannot preserve `path`, keep `description`; the coverage audit only requires counts and human-readable descriptions.
+
+## Extraction Validation Checklist
+
+Before reporting a final coverage result, verify the official extraction JSON summary:
+
+- `summary.apicode_count` matches the official index count shown by the extractor.
+- The JSON has one `docs` record per extracted ApiCode.
+- `summary.interface_count` is the sum of all detail-page interface counts.
+- `summary.warning_count` is `0` for a normal full audit.
+- `warnings` is empty; otherwise stop and report the affected ApiCodes instead of declaring coverage.
+- Detail records with `interface_count: 0`, rendered 404 pages, login prompts, dynamic-rendering failures, timeout errors, or tab/API-address count mismatches are blockers unless the user supplies verified replacement docs content.
+
+In restricted approval environments, prefer the single Python extractor command. Avoid ad-hoc shell pipelines such as `curl | python` because approval reviewers evaluate each shell segment separately and failures can look like extraction failures. Avoid hardcoded temp paths in reusable skill docs; use Python's platform temp directory, a user-supplied artifact directory, or a repo-local ignored output path selected for the current runtime. For conservative network environments, rerun with `--workers 1`; the extractor also retries transient HTTP/network failures with exponential backoff by default.
 
 ## Expected JSON Input
 
@@ -88,3 +133,22 @@ Generate a Markdown report with these sections:
 4. **后续建议**
    - Missing or quantity-mismatch work should be created or refreshed with the repository's `qcc-create` skill.
    - Deprecated candidates require a user decision before deletion.
+
+Also include a short validation footer in the user-facing answer:
+
+- Official source URL and extraction date/time.
+- Official ApiCode count and interface count.
+- Local ApiCode file count and SDK method count.
+- Extractor JSON path and Markdown report path when files were written; mention when the report was printed to stdout instead of saved.
+- Extraction warning count.
+- Explicit scope reminder: this audit checks only ApiCode/interface-count coverage, not request parameters, response fields, JSON tags, tests, or runtime correctness.
+
+## Skill Maintenance Check
+
+When editing this skill or its bundled scripts, run:
+
+```bash
+python3 skills/qcc-check/scripts/qcc_skill_quality.py
+```
+
+This validates Python syntax, eval metadata shape, offline extraction of quoted and unquoted `ApiCode` index forms, warning fail-closed behavior, comparator warning rejection, and report output directory creation.
