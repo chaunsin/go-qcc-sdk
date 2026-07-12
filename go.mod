@@ -1,6 +1,6 @@
 module github.com/chaunsin/go-qcc-sdk
 
-go 1.23.0
+go 1.25.0
 
 require (
 	github.com/go-resty/resty/v2 v2.16.5
@@ -14,5 +14,5 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/net v0.41.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 )
