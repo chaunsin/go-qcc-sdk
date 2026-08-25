@@ -117,8 +117,11 @@ func (a *Api) IPOGetIPODetail(ctx context.Context, req *IPOGetIPODetailReq) (*IP
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }
@@ -167,8 +170,11 @@ func (a *Api) IPOGetMainIndicator(ctx context.Context, req *IPOGetMainIndicatorR
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }
@@ -216,8 +222,11 @@ func (a *Api) IPOGetIPOToHolder(ctx context.Context, req *IPOGetIPOToHolderReq) 
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }
@@ -260,8 +269,11 @@ func (a *Api) IPOGetIPOExecutive(ctx context.Context, req *IPOGetIPOExecutiveReq
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }

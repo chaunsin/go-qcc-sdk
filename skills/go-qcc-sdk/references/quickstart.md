@@ -99,6 +99,22 @@ Most endpoint methods return an error when:
 - SDK auth token generation fails.
 - The HTTP request fails.
 - The HTTP status is not 200.
-- QCC returns a provider envelope with `Status != "200"`.
+- QCC returns a provider envelope with `Status` other than `StatusSuccess` (200) or `StatusNoResult` (201).
+
+Business errors (the last case) are returned as `*api.APIError`. Identify them with `errors.As` and branch on the `Status` enum constant:
+
+```go
+var apiErr *api.APIError
+if errors.As(err, &apiErr) {
+	switch apiErr.Status {
+	case api.StatusKeyArrears: // KEY 已欠费
+		// ... business handling
+	default:
+		log.Printf("qcc error: %s", apiErr.Message)
+	}
+}
+```
+
+Note: when QCC returns `201` (查询无结果), methods return `nil, nil` — check `resp == nil` to detect no data instead of relying on `err`. When QCC returns `205` (等待处理中), methods return `*api.APIError` with `Status == api.StatusProcessing`; poll/retry on it. Use `apiErr.Status.IsSuccess()` / `apiErr.Status.IsValid()` as needed.
 
 Handle `err` before reading `resp`. For diagnostics, log sanitized context such as method name, request ID/order number when available, and provider message; do not log secrets or full paid responses.

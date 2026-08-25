@@ -413,3 +413,4 @@ go.work.sum
 # Custom
 __pycache__/
 *.py[cod]
+.workbuddy/memory/

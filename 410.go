@@ -100,8 +100,11 @@ func (a *Api) ECIV4GetBasicDetailsByName(ctx context.Context, req *ECIV4GetBasic
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }

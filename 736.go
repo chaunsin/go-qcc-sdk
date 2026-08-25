@@ -33,6 +33,13 @@ type ECIInfoOverviewGetInfoReq struct {
 }
 
 type ECIInfoOverviewGetInfoResp struct {
+	Response[ECIInfoOverviewGetInfoRespResult]
+}
+
+// ECIInfoOverviewGetInfoRespResult 企业风险扫描结果。
+// 官方文档 https://openapi.qcc.com/dataApi/736 返回标准信封 + Result 嵌套结构，
+// Result.Status 为企业登记状态（如「存续（在营、开业、在册）」），与信封 Status 含义不同。
+type ECIInfoOverviewGetInfoRespResult struct {
 	PermissionInfo []struct {
 		Name     string `json:"Name"`
 		Province string `json:"Province"`
@@ -240,8 +247,11 @@ func (a *Api) ECIInfoOverviewGetInfo(ctx context.Context, req *ECIInfoOverviewGe
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }

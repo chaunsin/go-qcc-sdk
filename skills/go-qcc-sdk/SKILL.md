@@ -55,7 +55,7 @@ If the user does not name a method, inspect local SDK exports or README examples
    - Create a `context.Context`, preferably with timeout for request-scoped work.
    - Fill a request struct for an existing method.
    - Call `resp, err := client.Method(ctx, &api.MethodReq{...})`.
-   - Handle `err` before reading `resp`; SDK methods return errors for transport failures, non-200 HTTP status, and provider `Status != "200"`.
+   - Handle `err` before reading `resp`; SDK methods return errors for transport failures, non-200 HTTP status, and provider `Status` other than `StatusSuccess`/`StatusNoResult`. Business errors are `*api.APIError` — use `errors.As` and branch on the `Status` enum constants (e.g. `api.StatusKeyArrears`); when the provider returns `201` (no result) the method returns `nil, nil`, so detect no data with `resp == nil`; `205` (processing) is returned as `*api.APIError` with `Status == api.StatusProcessing`, so poll/retry on it.
    - Read business data from `resp.Result`; read pagination from `resp.Paging` when present.
 
 5. Make application code testable.
@@ -72,7 +72,7 @@ If the user does not name a method, inspect local SDK exports or README examples
    - Check context deadlines, network/proxy settings, and whether `Debug` may expose sensitive headers or query values in logs.
    - Note that current `api.New` behavior configures resty with `InsecureSkipVerify`; for strict production TLS, inspect current SDK behavior and prefer `NewClient` with a custom resty client.
    - Check request struct zero values: many SDK methods omit optional strings when empty and numeric fields when zero; verify the method code if zero is a meaningful input.
-   - Check `resp.Status`, `resp.Message`, `resp.OrderNumber`, and any `Paging` values in provider-level failures or diagnostics.
+   - Check `resp.Status`, `resp.Message`, `resp.OrderNumber`, and any `Paging` values in provider-level failures or diagnostics; for business errors, read the fields of the `*api.APIError` obtained via `errors.As` (or the `Status` enum constant it carries) instead of string-matching the error message.
 
 7. Report clearly.
    - Give the user runnable snippets or focused edits for their app.

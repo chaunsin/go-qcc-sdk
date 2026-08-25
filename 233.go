@@ -78,8 +78,11 @@ func (a *Api) CopyRightSearchCopyRight(ctx context.Context, req *CopyRightSearch
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }
@@ -146,8 +149,11 @@ func (a *Api) CopyRightGetCopyRight(ctx context.Context, req *CopyRightGetCopyRi
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }
@@ -204,8 +210,11 @@ func (a *Api) CopyRightSearchSoftwareCr(ctx context.Context, req *CopyRightSearc
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }
@@ -279,8 +288,11 @@ func (a *Api) CopyRightGetSoftwareCr(ctx context.Context, req *CopyRightGetSoftw
 	if reply.StatusCode() != 200 {
 		return nil, fmt.Errorf("request status code [%v] body: %s", reply.StatusCode(), string(reply.Body()))
 	}
-	if resp.Status != "200" {
-		return nil, fmt.Errorf("err: %+v", resp)
+	if resp.Status == StatusNoResult {
+		return nil, nil // 201 查询无结果
+	}
+	if err := resp.err(); err != nil {
+		return nil, err
 	}
 	return &resp, nil
 }

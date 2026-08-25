@@ -25,7 +25,7 @@
 - Use `a.auth()` and wrap auth failures as `fmt.Errorf("auth: %w", err)`.
 - Build resty requests with `SetContext(ctx)`, `Token` and `Timespan` headers, shared `key` query parameter, documented endpoint parameters, and `SetResult(&resp)`.
 - Prefer fluent resty chaining for request setup: include all unconditional endpoint query parameters in the initial `a.cli.R()` chain instead of assigning the request and then calling unconditional `c.SetQueryParam(...)` on later lines. Use separate calls only when a parameter is conditional, such as omitting an optional empty value.
-- Preserve current error handling: return transport errors directly, report non-200 HTTP status with response body, and return an error when `resp.Status != "200"`.
+- Preserve current error handling: return transport errors directly, report non-200 HTTP status with response body. For the QCC envelope status use the shared pattern from `errors.go`: return `nil, nil` when `resp.Status == StatusNoResult` ("201"), otherwise return `resp.err()` (a `*APIError`) for any other non-"200" status (including "205"). Auth failures keep the `fmt.Errorf("auth: %w", err)` wrapping.
 - Request parameter wire names and response JSON tags must exactly match official docs, including casing and spelling.
 - Send every documented request parameter unless official docs mark it inapplicable or the user explicitly scopes it out.
 - Omit optional strings when empty. For optional numeric fields, use pointer or explicit unset marker unless zero is confirmed not to be a meaningful documented value.

@@ -30,9 +30,22 @@ type Paging struct {
 }
 
 type Response[T any] struct {
-	Status      string `json:"Status"`
+	Status      Status `json:"Status"`
 	Message     string `json:"Message"`
 	OrderNumber string `json:"OrderNumber"`
 	Paging      Paging `json:"Paging,omitempty"`
 	Result      T      `json:"Result"`
+}
+
+// err 返回响应信封携带的业务错误。
+// StatusSuccess(200) 返回 nil；StatusNoResult(201) 也返回 nil（各 endpoint 会在其之前
+// 提前 return nil, nil 处理，此处仅作兜底）；其余状态码（含 205 等待处理中）返回 *APIError。
+// 私有方法，暂不对外暴露；通过方法提升，嵌入 Response[T] 的 XxxResp 可直接调用 resp.err()。
+func (r *Response[T]) err() error {
+	switch r.Status {
+	case StatusSuccess, StatusNoResult:
+		return nil
+	default:
+		return &APIError{Status: r.Status, Message: r.Message, OrderNumber: r.OrderNumber}
+	}
 }

@@ -42,7 +42,7 @@ Implement or audit this repository's Go SDK interface code from the official Qic
    - No-op when the existing implementation matches the official docs and comments are adequate.
 
 6. Implement with minimal, style-preserving changes.
-   - Keep the existing root-level `{apicode}.go` layout, license header, `package api`, exported request/response types, `context` and `fmt` usage, `auth()` call, `Token` and `Timespan` headers, `key` query parameter, status-code check, and `resp.Status != "200"` check.
+   - Keep the existing root-level `{apicode}.go` layout, license header, `package api`, exported request/response types, `context` and `fmt` usage, `auth()` call, `Token` and `Timespan` headers, `key` query parameter, `StatusNoResult` early return plus `resp.err()` check (see `errors.go`).
    - Implement every documented request parameter from the inventory. Each parameter must have a corresponding request struct field, exact `SetQueryParam`/`SetHeader`/body mapping, and a field comment when docs provide a description, enum, range, or default.
    - Do not drop optional parameters. Optional strings may be omitted only when empty; optional numeric parameters may be omitted on zero only when zero is not a documented valid value. If zero is valid or unset must be distinguishable, use a pointer field or another explicit representation rather than silently skipping zero.
    - Do not add undocumented business request parameters. The only common parameters allowed outside the docs inventory are the SDK auth/base parameters already used by the repo, such as `key`, `Token`, and `Timespan`.

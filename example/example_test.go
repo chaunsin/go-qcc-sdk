@@ -25,6 +25,7 @@ package example
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	api "github.com/chaunsin/go-qcc-sdk"
@@ -32,8 +33,8 @@ import (
 
 func Example() {
 	cli := api.New(&api.Config{
-		Key:       "",
-		SecretKey: "",
+		Key:       "<你的key>",
+		SecretKey: "<你的SecretKey>",
 		Debug:     true,
 	})
 	resp, err := cli.FuzzySearchGetList(context.Background(), &api.FuzzySearchGetListReq{
@@ -41,7 +42,25 @@ func Example() {
 		PageIndex: 1,
 	})
 	if err != nil {
+		var apiErr *api.APIError
+		if errors.As(err, &apiErr) {
+			switch apiErr.Status {
+			case api.StatusKeyArrears: // KEY 已欠费
+				// ... business handling
+			case api.StatusProcessing: // 205 等待处理中，可稍后轮询重试
+				// ... poll later
+			default:
+				fmt.Printf("qcc error: %s\n", apiErr.Message)
+			}
+			return
+		}
+		// 其他错误，网络错误，异常错误等。
 		panic(err)
 	}
-	fmt.Printf("resp: %+v\n", resp)
+
+	if resp == nil {
+		fmt.Println("查询无结果")
+	} else {
+		fmt.Printf("resp: %+v\n", resp)
+	}
 }

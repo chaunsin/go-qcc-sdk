@@ -76,7 +76,17 @@ Use this reference after identifying the target ApiCode and official QCC documen
 - Preserve the existing response checks:
   - return transport errors directly
   - non-200 HTTP status returns `fmt.Errorf("request status code [%v] body: %s", ...)`
-  - non-`"200"` QCC status returns `fmt.Errorf("err: %+v", resp)`
+  - QCC envelope status uses the shared pattern from `errors.go`: return `nil, nil` when `resp.Status == StatusNoResult` ("201"), otherwise call `resp.err()` and return the `*APIError` it yields for any other non-`"200"` status (including `205`). The endpoint tail after the HTTP-status check is:
+    ```go
+    if resp.Status == StatusNoResult {
+        return nil, nil // 201 查询无结果
+    }
+    if err := resp.err(); err != nil {
+        return nil, err
+    }
+    return &resp, nil
+    ```
+    On `201` (no result) the method returns `nil, nil`, so callers detect no data with `resp == nil`.
 - Do not call real paid QCC endpoints during implementation or tests.
 - Do not commit API keys, secret keys, generated tokens, cookies, or private official docs dumps.
 - If official docs cannot be verified, stop and ask for pasted docs content rather than guessing.

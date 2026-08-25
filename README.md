@@ -54,6 +54,41 @@ func Example() {
 
 ```
 
+## 错误处理
+
+SDK 将错误分为两类：
+
+- **业务错误**（HTTP 200 但响应信封 `Status` 非 `StatusSuccess` 且非 `StatusNoResult`）：返回 `*api.APIError`，包含 `Status`（`api.Status` 枚举类型）、`Message`、`OrderNumber` 字段，可通过 `errors.As` 识别并按状态码分支处理。
+- **其他错误**：auth 失败、网络错误、HTTP 非 200，保持普通 error 直接返回，不属于 `APIError`。
+
+当企查查返回 `201`（查询无结果）时，方法返回 `nil, nil`，通过 `resp == nil` 判断无数据。异步接口返回 `205`（等待处理中）时，方法返回 `*api.APIError`，`apiErr.Status` 为 `api.StatusProcessing`，调用方应稍后重试。
+
+```go
+resp, err := cli.FuzzySearchGetList(ctx, req)
+if err != nil {
+	var apiErr *api.APIError
+	if errors.As(err, &apiErr) {
+		switch apiErr.Status {
+		case api.StatusKeyArrears: // KEY 已欠费
+			// ... 业务处理
+		case api.StatusProcessing: // 205 等待处理中，稍后轮询重试
+			// ... 重试逻辑
+		default:
+			fmt.Println(apiErr.Message)
+		}
+		return err
+	}
+	return err // 网络/auth/HTTP 错误
+}
+if resp == nil {
+	// 201 查询无结果，无数据
+	return
+}
+// 正常处理 resp.Result
+```
+
+完整状态码常量（`StatusSuccess`、`StatusNoResult`、`StatusProcessing`、`StatusKeyArrears` 等 42 个）定义于 `errors.go`，官方文档：<https://openapi.qcc.com/services/after/status>。需要原始字符串时使用 `string(apiErr.Status)` 转换；可用 `Status.IsSuccess()` / `Status.IsValid()` 辅助判断。
+
 ## AI Agent 技能
 
 本仓库在 `skills` 目录内置了面向 AI agent 的技能，适用于 Codex 和 Claude, 技能分为应用接入和 SDK 维护两类。普通业务项目接入本 SDK 时优先使用 `go-qcc-sdk`；只有维护本仓库接口实现时才使用 `qcc-check` 或 `qcc-create`。
