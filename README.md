@@ -178,7 +178,7 @@ npx skills remove --agent codex --skill go-qcc-sdk
 - 审计官方文档与本地 SDK 覆盖情况：`/qcc:check` 或 `/qcc-check`
 - 创建或更新指定 ApiCode：`/qcc:create 886` 或 `/qcc-create https://openapi.qcc.com/dataApi/886`
 
-`skills` 是本仓库技能的唯一维护源，`.agents/skills` 与 `.claude/skills` 通过符号链接指向该目录，方便不同 AI agent 复用同一套技能说明。官方接口信息以 [https://openapi.qcc.com/dataApi](https://openapi.qcc.com/dataApi) 为准；使用技能时不要保存真实 QCC key、secret、cookie 或付费接口响应。
+`skills` 是本仓库技能的唯一维护源，`.agents/skills`、`.claude/skills` 与 `.workbuddy/skills` 通过符号链接指向该目录，方便不同 AI agent 复用同一套技能说明。官方接口信息以 [https://openapi.qcc.com/dataApi](https://openapi.qcc.com/dataApi) 为准；使用技能时不要保存真实 QCC key、secret、cookie 或付费接口响应。
 
 ## 问题
 

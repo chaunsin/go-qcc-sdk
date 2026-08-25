@@ -7,7 +7,7 @@
 - `api.go` contains client setup, config loading, base URL handling, and QCC auth token generation.
 - `types.go` contains shared response envelope types such as `Response[T]` and `Paging`.
 - Each QCC ApiCode is implemented in a root-level `{ApiCode}.go` file. One ApiCode file may contain multiple endpoint methods.
-- `skills/qcc-check` and `skills/qcc-create` are repo-local AI-agent skills. `.agents/skills` and `.claude/skills` symlink to `skills`.
+- `skills/qcc-check` and `skills/qcc-create` are repo-local AI-agent skills. `.agents/skills`, `.claude/skills`, and `.workbuddy/skills` symlink to `skills`.
 
 ## Agent Skill Triggers
 
