@@ -17,13 +17,14 @@ Audit whether this repository implements the same number of interfaces documente
      ```bash
      python3 skills/qcc-check/scripts/qcc_fetch_docs.py --summary-json --verbose
      ```
-   - Read the one-line JSON summary from stdout. Continue only when `status` is `ok`, `warning_count` is `0`, and `out` contains the official docs JSON path. Pass `--out <path>` when the current agent/tool needs an explicit workspace or artifact directory.
+   - Read the one-line JSON summary from stdout. Continue only when `status` is `ok` or `cached`, `warning_count` is `0`, and `out` contains the official docs JSON path. Pass `--out <path>` when the current agent/tool needs an explicit workspace or artifact directory.
    - The extractor reads the Nuxt SSR index, then reads every `https://openapi.qcc.com/dataApi/{ApiCode}` page and extracts the documented interface tabs and API addresses.
    - Treat ApiCode as the unique grouping key. One ApiCode can document multiple interfaces, so never assume one ApiCode equals one endpoint.
-   - If the extractor reports warnings, missing interface tabs, rendered 404 pages, login requirements, dynamic rendering, or network failures, stop and ask the user for accessible docs content or an approved browser/Chrome workflow. Do not guess interface counts.
+   - Distinguish warnings from notes. Detail pages load most API addresses via JavaScript, so a static-HTML address count smaller than the tab count is reported as a **note** (`noted_apicodes`), not a warning; `interface_count` is derived from the statically-rendered tab names and stays authoritative, so notes never block the audit. Only true warnings block: a detail record with `error`, `warnings` such as `no interface tabs or API addresses found`, `rendered 404 page`, login prompts, or dynamic-rendering/network failures. When a blocking warning exists, stop and ask the user for accessible docs content or an approved browser/Chrome workflow. Do not guess interface counts.
 
 2. Parallelize official docs extraction safely when possible.
    - The bundled extractor uses a thread pool by default, which is preferred in restricted shell environments because it avoids brittle `curl | python` pipelines and keeps the network request in one auditable command.
+   - To avoid re-fetching 167+ detail pages when re-running an audit in a session, pass `--cache` (and optionally `--cache-ttl <hours>`, default 6) to reuse a stable per-repo cache file in the platform temp directory. The cache is skipped in offline fixture mode and only persists clean (`status: ok`) extractions.
    - Split ApiCodes into independent batches and assign multiple subagents only when the user or current tool policy explicitly allows subagent work.
    - Keep one coordinator agent responsible for merging, local scanning, and final reporting.
    - If subagents are unavailable or approval does not allow them, use the bundled extractor or run the same extraction sequentially and mention the fallback in the report.
@@ -39,9 +40,10 @@ Audit whether this repository implements the same number of interfaces documente
      python3 skills/qcc-check/scripts/qcc_check.py --repo <repo> --docs-json <official-docs-json>
      ```
    - Let the report print to stdout unless the user or current tool needs a file artifact; if so, pass `--output <report-path>` using a path valid for the current computer or agent runtime.
-   - `qcc_check.py` rejects docs JSON that contains extractor warnings/errors by default. Use `--allow-doc-warnings` only for explicit manual inspection, not for a final coverage claim.
+   - To chain results into `qcc-create` or other tooling, pass `--json` to emit a structured `{summary, missing, deprecated, implemented}` object instead of Markdown (also honors `--output`).
+   - `qcc_check.py` rejects docs JSON that contains extractor warnings/errors by default. Use `--allow-doc-warnings` only for explicit manual inspection of real blocking warnings, not for a final coverage claim. Notes (address-count mismatches) are not warnings and never trigger rejection.
    - Load `references/qcc-check-workflow.md` when preparing or validating the JSON shape and report content.
-   - Validate the extractor summary before trusting the comparison: official ApiCode count, detail record count, official interface count, and warning count must be reported; `warning_count` should be `0` for a normal full audit.
+   - Validate the extractor summary before trusting the comparison: official ApiCode count, detail record count, official interface count, warning count, and note count must be reported; `warning_count` should be `0` for a normal full audit; `note_count` is informational only.
    - Classify results as missing, deprecated/suspicious, and implemented-summary. Do not list every implemented interface unless the user asks.
 
 5. Report next actions.

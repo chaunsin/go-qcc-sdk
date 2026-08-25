@@ -159,13 +159,18 @@ def is_rendered_404(detail_html: str) -> bool:
     return any(marker in detail_html for marker in ("error404", "statusCode:404", "This page could not be found"))
 
 
-def interfaces_from_detail(detail_html: str) -> tuple[list[dict[str, str]], list[str]]:
+def interfaces_from_detail(detail_html: str) -> tuple[list[dict[str, str]], list[str], list[str]]:
     names = extract_ref_tab_names(detail_html)
     urls = extract_endpoint_urls(detail_html)
     warnings: list[str] = []
+    notes: list[str] = []
 
+    # Detail pages load most API addresses via JavaScript, so a static-HTML
+    # address count that is smaller than the statically-rendered tab count is an
+    # informational note, not a blocker. interface_count below is derived from
+    # the tab names (authoritative); the address list is only a cross-check.
     if names and urls and len(names) != len(urls):
-        warnings.append(f"interface tab count {len(names)} does not match API address count {len(urls)}")
+        notes.append(f"interface tab count {len(names)} does not match API address count {len(urls)}")
 
     interfaces: list[dict[str, str]] = []
     for index in range(max(len(names), len(urls))):
@@ -181,11 +186,11 @@ def interfaces_from_detail(detail_html: str) -> tuple[list[dict[str, str]], list
 
     if not interfaces:
         warnings.append("no interface tabs or API addresses found")
-    return interfaces, warnings
+    return interfaces, warnings, notes
 
 
 def build_detail_record(code: str, detail_html: str) -> dict[str, Any]:
-    interfaces, warnings = interfaces_from_detail(detail_html)
+    interfaces, warnings, notes = interfaces_from_detail(detail_html)
     record: dict[str, Any] = {
         "apicode": code,
         "title": title_from_html(detail_html),
@@ -198,6 +203,8 @@ def build_detail_record(code: str, detail_html: str) -> dict[str, Any]:
         warnings.insert(0, "rendered 404 page")
     if warnings:
         record["warnings"] = warnings
+    if notes:
+        record["notes"] = notes
     return record
 
 
@@ -261,6 +268,22 @@ def collect_warnings(docs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return warnings
 
 
+def collect_notes(docs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    notes: list[dict[str, Any]] = []
+    for record in docs:
+        messages = [str(item) for item in record.get("notes", [])]
+        if messages:
+            notes.append(
+                {
+                    "apicode": record.get("apicode", ""),
+                    "url": record.get("url", ""),
+                    "title": record.get("title", ""),
+                    "messages": messages,
+                }
+            )
+    return notes
+
+
 def load_index_html(args: argparse.Namespace) -> str:
     if args.index_html:
         return Path(args.index_html).read_text(encoding="utf-8", errors="ignore")
@@ -287,15 +310,20 @@ def fetch_docs(codes: list[str], args: argparse.Namespace) -> list[dict[str, Any
 
 def build_payload(index_html: str, docs: list[dict[str, Any]]) -> dict[str, Any]:
     warnings = collect_warnings(docs)
+    notes = collect_notes(docs)
     return {
         "source": INDEX_URL,
         "fetched_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "docs": docs,
         "warnings": warnings,
+        "notes": notes,
         "summary": {
             "apicode_count": len(docs),
             "interface_count": sum(int(record.get("interface_count") or 0) for record in docs),
             "warning_count": len(warnings),
+            "note_count": len(notes),
+            "warned_apicodes": [str(item.get("apicode", "")) for item in warnings],
+            "noted_apicodes": [str(item.get("apicode", "")) for item in notes],
             "index_html_bytes": len(index_html.encode("utf-8")),
         },
     }
@@ -323,6 +351,52 @@ def print_warning_summary(payload: dict[str, Any]) -> None:
         print(f"... +{len(warnings) - 20} more warnings", file=sys.stderr)
 
 
+def print_note_summary(payload: dict[str, Any]) -> None:
+    notes = payload.get("notes", [])
+    for note in notes[:20]:
+        print(
+            f"note {note['apicode']}: " + "; ".join(note["messages"]),
+            file=sys.stderr,
+        )
+    if len(notes) > 20:
+        print(f"... +{len(notes) - 20} more notes", file=sys.stderr)
+
+
+def cache_path_for(repo_root: Path) -> Path:
+    # Stable, per-repo, cross-platform cache name in the platform temp directory.
+    # Not hardcoded to any OS-specific path; reused across runs within --cache-ttl.
+    return Path(tempfile.gettempdir()) / f"qcc_official_docs_{repo_root.name}.json"
+
+
+def load_cache(path: Path, ttl_seconds: float) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    try:
+        age = time.time() - path.stat().st_mtime
+    except OSError:
+        return None
+    if age > ttl_seconds:
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    # A cache file must be a full extraction payload; a structurally invalid but
+    # parseable file (e.g. hand-edited) is treated as a miss, never trusted.
+    if not isinstance(data, dict) or not isinstance(data.get("summary"), dict) or not isinstance(data.get("docs"), list):
+        return None
+    return data
+
+
+def write_cache(path: Path, payload: dict[str, Any]) -> None:
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    except OSError:
+        # Cache is a convenience; never fail a run because the cache could not be written.
+        pass
+
+
 def emit_summary(status: str, payload: dict[str, Any], out: Path | None, started: float, summary_json: bool) -> None:
     summary = payload["summary"]
     elapsed = time.time() - started
@@ -332,6 +406,9 @@ def emit_summary(status: str, payload: dict[str, Any], out: Path | None, started
             "apicode_count": summary["apicode_count"],
             "interface_count": summary["interface_count"],
             "warning_count": summary["warning_count"],
+            "note_count": summary.get("note_count", 0),
+            "warned_apicodes": summary.get("warned_apicodes", []),
+            "noted_apicodes": summary.get("noted_apicodes", []),
             "out": str(out) if out else None,
             "elapsed_seconds": round(elapsed, 3),
         }
@@ -344,6 +421,7 @@ def emit_summary(status: str, payload: dict[str, Any], out: Path | None, started
         f"apicodes={summary['apicode_count']}",
         f"interfaces={summary['interface_count']}",
         f"warnings={summary['warning_count']}",
+        f"notes={summary.get('note_count', 0)}",
     ]
     if out:
         parts.append(f"out={out}")
@@ -362,6 +440,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--retries", type=int, default=2, help="Retry attempts for transient HTTP/network failures")
     parser.add_argument("--retry-delay", type=float, default=0.75, help="Initial retry delay in seconds; later retries use exponential backoff")
     parser.add_argument("--allow-warnings", action="store_true", help="Write JSON and exit 0 even when extraction warnings exist")
+    parser.add_argument("--cache", action="store_true", help="Reuse a stable per-repo cache when fresh (see --cache-ttl); ignored in offline fixture mode")
+    parser.add_argument("--cache-ttl", type=float, default=6.0, help="Cache freshness window in hours when --cache is set (default 6)")
     parser.add_argument("--verbose", action="store_true", help="Print progress to stderr")
     parser.add_argument("--index-html", help="Offline index HTML fixture for parser validation")
     parser.add_argument("--detail-dir", help="Offline directory containing {ApiCode}.html detail fixtures")
@@ -381,6 +461,17 @@ def main(argv: list[str]) -> int:
 
     started = time.time()
 
+    # Opt-in network-fetch cache (skipped for offline fixtures and print-only modes).
+    offline_mode = bool(args.index_html or args.detail_dir)
+    repo_root = Path(__file__).resolve().parents[3]
+    cache_path: Path | None = None
+    if args.cache and not offline_mode:
+        cache_path = cache_path_for(repo_root)
+        cached = load_cache(cache_path, args.cache_ttl * 3600.0)
+        if cached is not None:
+            emit_summary("cached", cached, cache_path, started, args.summary_json)
+            return 0
+
     index_html = load_index_html(args)
     codes = extract_index_codes(index_html)
     if not codes:
@@ -389,6 +480,8 @@ def main(argv: list[str]) -> int:
 
     docs = fetch_docs(codes, args)
     payload = build_payload(index_html, docs)
+    if payload.get("notes"):
+        print_note_summary(payload)
     if payload["warnings"] and not args.allow_warnings:
         print_warning_summary(payload)
         print("refusing to pass with extraction warnings; use --allow-warnings only for manual inspection", file=sys.stderr)
@@ -397,6 +490,8 @@ def main(argv: list[str]) -> int:
 
     status = "warning" if payload["warnings"] else "ok"
     write_payload(out, payload, exclusive=out_is_default)
+    if cache_path is not None and status == "ok":
+        write_cache(cache_path, payload)
     emit_summary(status, payload, out, started, args.summary_json)
     return 0
 

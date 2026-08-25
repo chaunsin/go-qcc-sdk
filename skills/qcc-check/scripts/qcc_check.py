@@ -639,7 +639,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--local-json", action="store_true", help="Print local scan JSON and exit")
     parser.add_argument("--docs-json", help="Official docs extraction JSON to compare against")
     parser.add_argument("--allow-doc-warnings", action="store_true", help="Compare docs JSON even when extraction warnings/errors are present")
-    parser.add_argument("--output", help="Optional path for the Markdown report")
+    parser.add_argument("--json", action="store_true", help="Emit the comparison result as JSON (summary/missing/deprecated/implemented) instead of Markdown; pairs with --docs-json")
+    parser.add_argument("--output", help="Optional path for the Markdown or JSON report (see --json)")
     return parser.parse_args(argv)
 
 
@@ -659,7 +660,7 @@ def main(argv: list[str]) -> int:
 
         docs = load_docs(Path(args.docs_json), allow_warnings=args.allow_doc_warnings)
         result = compare(docs, local)
-        report = markdown_report(result)
+        report = json.dumps(result, ensure_ascii=False, indent=2) + "\n" if args.json else markdown_report(result)
         if args.output:
             output = Path(args.output)
             output.parent.mkdir(parents=True, exist_ok=True)

@@ -28,14 +28,16 @@ python3 skills/qcc-check/scripts/qcc_fetch_docs.py --summary-json --verbose
 The extractor writes to a unique JSON file in Python's platform temp directory by default. With `--summary-json`, stdout is a one-line machine-readable JSON object:
 
 ```json
-{"status":"ok","apicode_count":167,"interface_count":194,"warning_count":0,"out":"/path/to/qcc_official_docs.json"}
+{"status":"ok","apicode_count":167,"interface_count":194,"warning_count":0,"note_count":20,"warned_apicodes":[],"noted_apicodes":["213","231",...],"out":"/path/to/qcc_official_docs.json"}
 ```
 
-Continue only when `status` is `ok`, `warning_count` is `0`, and `out` is non-empty. If the current runtime needs a stable artifact location, pass `--out <path>` with a path valid for that computer or agent tool. To inspect Python's platform temp directory without fetching network docs, run:
+Continue only when `status` is `ok` or `cached`, `warning_count` is `0`, and `out` is non-empty. If the current runtime needs a stable artifact location, pass `--out <path>` with a path valid for that computer or agent tool. To inspect Python's platform temp directory without fetching network docs, run:
 
 ```bash
 python3 skills/qcc-check/scripts/qcc_fetch_docs.py --print-temp-dir
 ```
+
+To avoid re-fetching 167+ detail pages when re-running an audit in a session, pass `--cache` (optionally `--cache-ttl <hours>`, default 6). The cache is a stable per-repo file (`qcc_official_docs_<repo>.json`) inside the platform temp directory, is skipped in offline fixture mode, and only persists clean (`status: ok`) extractions. A cache hit returns `status: cached` with `out` pointing at the cache file.
 
 Then run the comparator:
 
@@ -43,9 +45,9 @@ Then run the comparator:
 python3 skills/qcc-check/scripts/qcc_check.py --repo . --docs-json <official-docs-json>
 ```
 
-The comparator prints Markdown to stdout by default. Only pass `--output <report-path>` when the user or tool needs a file artifact, and choose a runtime-valid path instead of hardcoding macOS-only locations such as `/private/tmp`.
+The comparator prints Markdown to stdout by default. Pass `--json` to emit a structured `{summary, missing, deprecated, implemented}` object instead (useful for chaining into `qcc-create`). Only pass `--output <report-path>` when the user or tool needs a file artifact, and choose a runtime-valid path instead of hardcoding macOS-only locations such as `/private/tmp`.
 
-`qcc_check.py` rejects official docs JSON with top-level `warnings`, record-level `error`/`warnings`, or non-zero `summary.warning_count` by default. Use `--allow-doc-warnings` only for explicit manual inspection; do not use it for a final coverage claim.
+`qcc_check.py` rejects official docs JSON with a top-level `warnings` list, record-level `error`/`warnings`, or a non-zero `summary.warning_count` by default. Use `--allow-doc-warnings` only for explicit manual inspection of real blocking warnings; do not use it for a final coverage claim. **Notes are not warnings**: address-count mismatches are recorded under `notes` / `summary.note_count` / `summary.noted_apicodes` and never trigger rejection, because `interface_count` is derived from the statically-rendered tab names (authoritative), while API addresses are partially JavaScript-loaded.
 
 The extractor opens each detail page and extracts every documented interface under that ApiCode. A detail record should look like:
 
@@ -76,9 +78,10 @@ Before reporting a final coverage result, verify the official extraction JSON su
 - `summary.apicode_count` matches the official index count shown by the extractor.
 - The JSON has one `docs` record per extracted ApiCode.
 - `summary.interface_count` is the sum of all detail-page interface counts.
-- `summary.warning_count` is `0` for a normal full audit.
+- `summary.warning_count` is `0` for a normal full audit. Non-zero `warning_count` (or any record `error`/`warnings`) is a blocker; stop and report the affected ApiCodes instead of declaring coverage.
+- `summary.note_count` and `summary.noted_apicodes` are informational only (address-count mismatches from JS-loaded addresses); they do not block and do not affect `interface_count` reliability.
 - `warnings` is empty; otherwise stop and report the affected ApiCodes instead of declaring coverage.
-- Detail records with `interface_count: 0`, rendered 404 pages, login prompts, dynamic-rendering failures, timeout errors, or tab/API-address count mismatches are blockers unless the user supplies verified replacement docs content.
+- Detail records with `interface_count: 0`, rendered 404 pages, login prompts, dynamic-rendering failures, or timeout errors are blockers unless the user supplies verified replacement docs content. A pure address-count mismatch is only a **note** (no zero interfaces, no 404, no login) and is not a blocker.
 
 In restricted approval environments, prefer the single Python extractor command. Avoid ad-hoc shell pipelines such as `curl | python` because approval reviewers evaluate each shell segment separately and failures can look like extraction failures. Avoid hardcoded temp paths in reusable skill docs; use Python's platform temp directory, a user-supplied artifact directory, or a repo-local ignored output path selected for the current runtime. For conservative network environments, rerun with `--workers 1`; the extractor also retries transient HTTP/network failures with exponential backoff by default.
 
@@ -139,8 +142,8 @@ Also include a short validation footer in the user-facing answer:
 - Official source URL and extraction date/time.
 - Official ApiCode count and interface count.
 - Local ApiCode file count and SDK method count.
-- Extractor JSON path and Markdown report path when files were written; mention when the report was printed to stdout instead of saved.
-- Extraction warning count.
+- Extractor JSON path and Markdown/JSON report path when files were written; mention when the report was printed to stdout instead of saved.
+- Extraction warning count and note count (with the noted ApiCodes if few).
 - Explicit scope reminder: this audit checks only ApiCode/interface-count coverage, not request parameters, response fields, JSON tags, tests, or runtime correctness.
 
 ## Skill Maintenance Check
